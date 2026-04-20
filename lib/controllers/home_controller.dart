@@ -1,4 +1,4 @@
-import 'package:bank123/services/bff_service.dart';
+import 'package:bank123/services/ibff_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -8,7 +8,7 @@ import 'package:jwt_decoder/jwt_decoder.dart';
 import 'dart:developer' as developer;
 
 class HomeController extends GetxController {
-  final BffService _bffService = BffService();
+  final IBffService _bffService = Get.find<IBffService>();
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final _storage = const FlutterSecureStorage();
   var isLoading = false.obs;
@@ -23,6 +23,9 @@ class HomeController extends GetxController {
   }
 
   Future<void> _validarTokenInicial() async {
+    const isMock = String.fromEnvironment('USE_MOCK') == 'true';
+    if (isMock) return;
+
     final token = await _storage.read(key: 'ACCESS_TOKEN');
 
     if (token == null || JwtDecoder.isExpired(token)) {
@@ -44,6 +47,9 @@ class HomeController extends GetxController {
   }
 
   Future<bool> _sessaoValida() async {
+    const isMock = String.fromEnvironment('USE_MOCK') == 'true';
+    if (isMock) return true;
+
     try {
       // Verifica TTL customizado
       final ttlString = await _storage.read(key: 'ttl_sessao');

@@ -4,7 +4,6 @@
     // Para obter mais informações, acesse: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
-        
         {
             "name": "bank123",
             "request": "launch",
@@ -12,6 +11,15 @@
             "args": [
                 "--dart-define",
                 "API_BASE_URL=https://bank123-main-297cd30.d2.zuplo.dev"
+            ]
+        },
+        {
+            "name": "bank123-local",
+            "request": "launch",
+            "type": "dart",
+            "args": [
+                "--dart-define",
+                "USE_MOCK=true"
             ]
         },
         {

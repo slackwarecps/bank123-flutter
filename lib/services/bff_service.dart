@@ -1,3 +1,4 @@
+import 'package:bank123/services/ibff_service.dart';
 import 'dart:developer' as developer;
 import 'dart:io';
 import 'package:crypto/crypto.dart';
@@ -8,7 +9,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:uuid/uuid.dart';
 
-class BffService {
+class HttpBffService implements IBffService {
   late Dio _dio;
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final _storage = const FlutterSecureStorage();
@@ -26,7 +27,7 @@ class BffService {
   final String _expectedFingerprint = 
       'F9:14:B8:18:CA:D2:7D:D4:08:33:A8:4E:47:3D:27:AF:94:75:1D:2D:17:CE:1C:28:92:FB:21:0E:E4:C4:07:C6';
 
-  BffService() {
+  HttpBffService() {
     _dio = Dio(BaseOptions(
       baseUrl: _baseUrl,
       connectTimeout: const Duration(seconds: 10),
@@ -137,6 +138,7 @@ class BffService {
   // Métodos da API
 
   // 1. Perfil
+  @override
   Future<dynamic> getPerfil() async {
     try {
       final response = await _dio.get('/bff-bank123/usuario/v1/perfil');
@@ -147,6 +149,7 @@ class BffService {
   }
 
   // 2. Saldo
+  @override
   Future<dynamic> getSaldo() async {
     try {
       // Agora chamamos direto, confiando 100% no Interceptor acima
@@ -158,6 +161,7 @@ class BffService {
   }
 
   // 3. Extrato
+  @override
   Future<List<dynamic>> getExtrato() async {
     try {
       final response = await _dio.get('/bff-bank123/extrato/v1/listagem');
@@ -172,6 +176,7 @@ class BffService {
   }
 
   // 4. Transferência
+  @override
   Future<Response> postTransferencia(Map<String, dynamic> payload) async {
     try {
       final response = await _dio.post(

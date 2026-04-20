@@ -1,8 +1,8 @@
-import 'package:bank123/services/bff_service.dart';
+import 'package:bank123/services/ibff_service.dart';
 import 'package:get/get.dart';
 
 class ExtratoController extends GetxController {
-  final BffService _bffService = BffService();
+  final IBffService _bffService = Get.find<IBffService>();
   var isLoading = false.obs;
   var extratoList = <dynamic>[].obs;
 

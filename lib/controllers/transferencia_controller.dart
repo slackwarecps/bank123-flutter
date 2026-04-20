@@ -1,9 +1,9 @@
-import 'package:bank123/services/bff_service.dart';
+import 'package:bank123/services/ibff_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class TransferenciaController extends GetxController {
-  final BffService _service = BffService();
+  final IBffService _service = Get.find<IBffService>();
   var isLoading = false.obs;
   
   final formKey = GlobalKey<FormState>();

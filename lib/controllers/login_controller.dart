@@ -1,3 +1,4 @@
+import 'package:bank123/services/auth_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -7,7 +8,7 @@ import 'package:jwt_decoder/jwt_decoder.dart';
 import 'dart:developer' as developer;
 
 class LoginController extends GetxController {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final IAuthService _authService = Get.find<IAuthService>();
   final LocalAuthentication _localAuth = LocalAuthentication();
   final _storage = const FlutterSecureStorage();
   
@@ -23,6 +24,16 @@ class LoginController extends GetxController {
   void onInit() {
     super.onInit();
     _checkBiometricSettings();
+    _autoFillMockCredentials();
+  }
+
+  void _autoFillMockCredentials() {
+    const isMock = String.fromEnvironment('USE_MOCK') == 'true';
+    if (isMock) {
+      emailController.text = "teste@teste.com.br";
+      passwordController.text = "teste123";
+      developer.log('MOCK MODE: Credenciais preenchidas automaticamente.', name: 'LoginController');
+    }
   }
   
   @override
@@ -69,23 +80,20 @@ class LoginController extends GetxController {
     try {
       isLoading.value = true;
 
-      UserCredential userCredential = await _auth.signInWithEmailAndPassword(
-        email: emailController.text.trim(),
-        password: passwordController.text.trim(),
+      AuthResult result = await _authService.signInWithEmailAndPassword(
+        emailController.text.trim(),
+        passwordController.text.trim(),
       );
 
-      // Logs de Retorno e Status do Login
-      final tokenResult = await userCredential.user?.getIdTokenResult();
-      final accessToken = tokenResult?.token;
+      final accessToken = result.token;
       
- 
-        developer.log('\n======= LOGIN SUCCESS =======', name: 'LoginController');
-        developer.log('Status: Autenticado com sucesso', name: 'LoginController');
-        developer.log('User UID: ${userCredential.user?.uid}', name: 'LoginController');
-        developer.log('Email: ${userCredential.user?.email}', name: 'LoginController');
-        developer.log('Token: $accessToken', name: 'LoginController');
-        developer.log('Claims: ${tokenResult?.claims}', name: 'LoginController');
-        developer.log('==============================\n', name: 'LoginController');
+      developer.log('\n======= LOGIN SUCCESS =======', name: 'LoginController');
+      developer.log('Status: Autenticado com sucesso', name: 'LoginController');
+      developer.log('User UID: ${result.uid}', name: 'LoginController');
+      developer.log('Email: ${result.email}', name: 'LoginController');
+      developer.log('Token: $accessToken', name: 'LoginController');
+      developer.log('Claims: ${result.claims}', name: 'LoginController');
+      developer.log('==============================\n', name: 'LoginController');
    
       // Salvar o Token de acesso para validação biométrica futura
       if (accessToken != null) {
@@ -93,7 +101,7 @@ class LoginController extends GetxController {
       }
 
       // Extrair numeroConta das claims e salvar no Secure Storage
-      final claims = tokenResult?.claims;
+      final claims = result.claims;
 
       if (claims != null && claims.containsKey('bank123/jwt/claims')) {
         final bankClaims = claims['bank123/jwt/claims'];
@@ -117,8 +125,12 @@ class LoginController extends GetxController {
 
       // If successful, navigate to home
       Get.offAllNamed('/home-page');
-    } on FirebaseAuthException catch (e) {
-      String errorMessage = "E-mail ou senha inválidos.";
+    } catch (e) {
+      String errorMessage = "E-mail ou senha inválidos ou erro de conexão.";
+      
+      if (e.toString().contains('firebase_auth')) {
+         errorMessage = "E-mail ou senha inválidos.";
+      }
 
       Get.snackbar(
         "Falha no Login",

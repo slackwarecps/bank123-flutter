@@ -1,5 +1,6 @@
 
 
+import 'package:bank123/bindings/initial_binding.dart';
 import 'package:bank123/bindings/login_binding.dart';
 
 import 'package:bank123/telas/cadastro_page.dart';
@@ -130,6 +131,7 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
+      initialBinding: InitialBinding(),
       unknownRoute: GetPage(
         name: '/notfound',
         page: () => PaginaNaoEncontrada(),
