@@ -69,7 +69,7 @@ class ConfiguracaoPage extends StatelessWidget {
                   onChanged: (bool value) {
                     controller.toggleBiometria(value);
                   },
-                  activeColor: colorScheme.primary,
+                  activeThumbColor: colorScheme.primary,
                 ),
               ),
             ],

@@ -71,7 +71,7 @@ class PerfilPage extends StatelessWidget {
                     decoration: BoxDecoration(
                       color: colorScheme.surfaceContainerHighest,
                       borderRadius: BorderRadius.circular(8),
-                      border: Border.all(color: Colors.grey.withOpacity(0.3)),
+                      border: Border.all(color: Colors.grey.withValues(alpha: 0.3)),
                     ),
                     child: SelectableText(
                       controller.token.value,

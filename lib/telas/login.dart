@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class LoginScreen extends StatelessWidget {
+  LoginScreen({super.key});
+
   // Find the injected controller
   final LoginController controller = Get.find<LoginController>();
 

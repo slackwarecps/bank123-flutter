@@ -1,4 +1,5 @@
 import 'package:bank123/services/auth_service.dart';
+import 'dart:developer' as developer;
 
 class MockAuthService implements IAuthService {
   // Um Token Mock que parece um JWT real para não quebrar o JwtDecoder
@@ -31,7 +32,7 @@ class MockAuthService implements IAuthService {
 
   @override
   Future<void> signOut() async {
-    print("MOCK: Usuário deslogado");
+    developer.log("MOCK: Usuário deslogado", name: 'MockAuthService');
   }
 
   @override
