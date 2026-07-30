@@ -1,0 +1,37 @@
+{
+  "recommendations": [
+    // Core Flutter/Dart support (official)
+    "Dart-Code.flutter",
+    "Dart-Code.dart-code",
+
+    // Most-installed community snippets extension for Flutter (1M+ installs)
+    "Nash.awesome-flutter-snippets",
+
+    // Pubspec dependency autocomplete/management
+    "jeroen-meijer.pubspec-assist",
+
+    // Flutter Intl / .arb localization support
+    "localizely.flutter-intl",
+
+    // Firebase syntax highlighting (project uses firebase_core/auth/crashlytics)
+    "toba.vsfire",
+
+    // .env syntax highlighting (project has a .env file)
+    "mikestead.dotenv",
+
+    // YAML support (pubspec.yaml, analysis_options.yaml, firebase.json)
+    "redhat.vscode-yaml",
+
+    // Inline error/warning highlighting
+    "usernamehw.errorlens",
+
+    // TODO/FIXME tracking
+    "gruntfuggly.todo-tree",
+
+    // Spell checking for code and docs
+    "streetsidesoftware.code-spell-checker",
+
+    // Enhanced git history/blame
+    "eamodio.gitlens"
+  ]
+}

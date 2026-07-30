@@ -8,7 +8,7 @@
             "name": "bank123",
             "request": "launch",
             "type": "dart",
-            "args": [
+            "args": [   
                 "--dart-define",
                 "API_BASE_URL=https://bank123-main-297cd30.d2.zuplo.dev"
             ]
