@@ -31,6 +31,9 @@
     // Spell checking for code and docs
     "streetsidesoftware.code-spell-checker",
 
+    // Portuguese (BR) dictionary for the spell checker above
+    "streetsidesoftware.code-spell-checker-portuguese",
+
     // Enhanced git history/blame
     "eamodio.gitlens"
   ]

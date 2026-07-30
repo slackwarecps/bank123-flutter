@@ -58,6 +58,7 @@
         "**/pubspec.lock": true
     },
 
+    "cSpell.language": "en,pt-BR",
     "cSpell.words": [
         "bank123",
         "bindings",
