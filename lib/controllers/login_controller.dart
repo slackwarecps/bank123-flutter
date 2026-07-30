@@ -1,4 +1,5 @@
 import 'package:bank123/services/auth_service.dart';
+import 'package:bank123/services/auth_exceptions.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:local_auth/local_auth.dart';
@@ -22,6 +23,9 @@ class LoginController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    print('╔════════════════════════════════════════════════════════════');
+    print('║ [LoginController] onInit() called');
+    print('╚════════════════════════════════════════════════════════════');
     _checkBiometricSettings();
     _autoFillMockCredentials();
   }
@@ -30,10 +34,12 @@ class LoginController extends GetxController {
     const isMock = String.fromEnvironment('USE_MOCK') == 'true';
     const autoLogin = String.fromEnvironment('AUTO_LOGIN') == 'true';
 
+    print('[LoginController] _autoFillMockCredentials() - isMock=$isMock, autoLogin=$autoLogin');
+
     if (isMock || autoLogin) {
       emailController.text = "teste@teste.com.br";
       passwordController.text = "teste123";
-      developer.log('Auto-fill: Credenciais preenchidas automaticamente.', name: 'LoginController');
+      print('[LoginController] ✅ Credenciais preenchidas: teste@teste.com.br');
     }
   }
   
@@ -68,7 +74,11 @@ class LoginController extends GetxController {
   }
 
   Future<void> login() async {
+    print('[LoginController] 🔑 login() method called');
+    print('[LoginController] Email: ${emailController.text}');
+
     if (emailController.text.isEmpty || passwordController.text.isEmpty) {
+      print('[LoginController] ❌ Email or password empty!');
       if (!Get.testMode) {
         Get.snackbar(
           "Erro",
@@ -82,6 +92,7 @@ class LoginController extends GetxController {
 
     try {
       isLoading.value = true;
+      print('[LoginController] 🔄 Calling signInWithEmailAndPassword()...');
 
       AuthResult result = await _authService.signInWithEmailAndPassword(
         emailController.text.trim(),
@@ -130,10 +141,18 @@ class LoginController extends GetxController {
       Get.offAllNamed('/home-page');
     } catch (e) {
       String errorMessage = "E-mail ou senha inválidos ou erro de conexão.";
-      
-      if (e.toString().contains('firebase_auth')) {
-         errorMessage = "E-mail ou senha inválidos.";
+
+      if (e is ConnectivityError) {
+        errorMessage = e.message;
+      } else if (e is InvalidCredentialsError) {
+        errorMessage = e.message;
+      } else if (e is TokenExpiredError) {
+        errorMessage = e.message;
+      } else if (e.toString().contains('firebase_auth')) {
+        errorMessage = "E-mail ou senha inválidos.";
       }
+
+      developer.log('Login error: ${e.runtimeType} - $errorMessage', name: 'LoginController', error: e);
 
       if (!Get.testMode) {
         Get.snackbar(
