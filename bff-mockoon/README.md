@@ -27,13 +27,136 @@ flutter run --dart-define=API_BASE_URL=http://10.0.2.2:8089
 flutter run --dart-define=API_BASE_URL=http://localhost:8089
 ```
 
-### 3. Login no app
+### 3. Login no app (Produção - Firebase)
 
-- **Use o Firebase real** — autenticação continua via Firebase (projeto `draft1-app-fabao`), não é mockada
-- Não use `USE_MOCK=true` (senão o app usa `MockBffService` em vez do Mockoon)
-- Após logar com credenciais Firebase válidas, o app vai bater no mock em vez do BFF real
+- **Modo padrão:** Autenticação via Firebase (projeto `draft1-app-fabao`)
+- Não precisa de `--dart-define AUTH_MODE` (default é `firebase`)
+- Após logar com credenciais Firebase válidas, o app bate no mock para BFF em vez do servidor real
 
-## Endpoints Disponíveis
+---
+
+## Dual Authentication Modes
+
+### Modo 1: Produção Firebase (Padrão)
+
+**Comando:**
+```bash
+flutter run --dart-define=API_BASE_URL=http://10.0.2.2:8089
+# Ou simplesmente:
+flutter run
+```
+
+**Características:**
+- ✅ Firebase SDK inicializa normalmente
+- ✅ Login via Firebase Auth
+- ✅ BFF recebe tokens Firebase assinados
+- ✅ **Recomendado para simulação de produção**
+
+---
+
+### Modo 2: Desenvolvimento/E2E - Basic Auth (Offline)
+
+**Comando:**
+```bash
+flutter run --dart-define=AUTH_MODE=basic --dart-define=API_BASE_URL=http://10.0.2.2:8089
+```
+
+**Características:**
+- ✅ Firebase SDK **não inicializa** (zero network calls)
+- ✅ Login via HTTP POST `/auth/login` (endpoints abaixo)
+- ✅ Tokens JWT sem assinatura criptográfica (suficiente para testes)
+- ✅ **Ideal para testes offline e E2E automatizados**
+- ✅ Auto-refresh de tokens expirados via `/auth/refresh`
+
+**Credenciais padrão (Mockoon):**
+- Email: `teste@teste.com.br`
+- Senha: `teste123`
+
+Ou pré-preenchidas com:
+```bash
+flutter run --dart-define=AUTH_MODE=basic \
+  --dart-define=API_BASE_URL=http://10.0.2.2:8089 \
+  --dart-define=AUTO_LOGIN=true
+```
+
+---
+
+### Modo 3: Testes Offline (Completo Mock)
+
+**Comando:**
+```bash
+flutter run --dart-define=USE_MOCK=true
+```
+
+**Características:**
+- ✅ Nenhuma chamada de rede (app totalmente offline)
+- ✅ Firebase **e** BFF mockados em memória
+- ✅ Ideal para testes unitários, prototipagem rápida
+- ⚠️ Não testa integração real com servidor Mockoon
+
+---
+
+## Endpoints de Autenticação (AUTH_MODE=basic)
+
+### POST `/auth/login`
+Autentica usuário e retorna JWT (sem assinatura criptográfica).
+
+**Request:**
+```json
+{
+  "email": "teste@teste.com.br",
+  "password": "teste123"
+}
+```
+
+**Resposta (200):**
+```json
+{
+  "token": "eyJhbGciOiJub25lIiwidHlwIjoiSldUIn0.eyJzdWIiOiJ1c2VyLTEyMyIsImVtYWlsIjoidGVzdGVAdGVzdGUuY29tLmJyIiwiaWF0IjoxNjI3NDEwNDAwLCJleHAiOjE2Mjc0OTY4MDB9."
+}
+```
+
+**Erro (401):**
+```json
+{
+  "error": "E-mail ou senha inválidos"
+}
+```
+
+---
+
+### POST `/auth/refresh`
+Renova JWT expirado.
+
+**Request:**
+```json
+{
+  "token": "<expired-jwt>"
+}
+```
+
+**Resposta (200):**
+```json
+{
+  "token": "<new-jwt>"
+}
+```
+
+---
+
+### POST `/auth/logout`
+Invalida sessão.
+
+**Resposta (200):**
+```json
+{
+  "status": "logged_out"
+}
+```
+
+---
+
+## Endpoints de BFF Disponíveis
 
 ### GET `/bff-bank123/usuario/v1/perfil`
 Retorna dados do perfil do usuário.

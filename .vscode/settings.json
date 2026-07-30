@@ -65,6 +65,7 @@
         "**/pubspec.lock": true
     },
 
+    "cSpell.enabled": false,
     "cSpell.language": "en,pt-BR",
     "cSpell.words": [
         "bank123",

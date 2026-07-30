@@ -31,7 +31,9 @@
                 "--dart-define",
                 "API_BASE_URL=http://localhost:8089",
                 "--dart-define",
-                "AUTO_LOGIN=true"
+                "AUTO_LOGIN=true",
+                "--dart-define",
+                "USE_MOCK=false"
             ]
         },
         {

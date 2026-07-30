@@ -318,6 +318,138 @@
       "type": "http",
       "streamingMode": null,
       "streamingInterval": 0
+    },
+    {
+      "uuid": "550e8400-e29b-41d4-a716-446655440001",
+      "documentation": "POST /auth/login — Autentica usuário e retorna JWT (sem assinatura criptográfica)",
+      "method": "post",
+      "endpoint": "/auth/login",
+      "responses": [
+        {
+          "uuid": "550e8400-e29b-41d4-a716-446655440002",
+          "body": "{\n  \"token\": \"eyJhbGciOiJub25lIiwidHlwIjoiSldUIn0.eyJzdWIiOiJ1c2VyLTEyMyIsImVtYWlsIjoidGVzdGVAdGVzdGUuY29tLmJyIiwiaWF0IjoxNjI3NDEwNDAwLCJleHAiOjE2Mjc0OTY4MDB9.\"\n}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "Sucesso",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "default": true,
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "550e8400-e29b-41d4-a716-446655440003",
+          "body": "{\"error\": \"E-mail ou senha inválidos\"}",
+          "latency": 0,
+          "statusCode": 401,
+          "label": "Credenciais Inválidas",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "type": "http",
+      "responseMode": null,
+      "streamingMode": null,
+      "streamingInterval": 0
+    },
+    {
+      "uuid": "550e8400-e29b-41d4-a716-446655440004",
+      "documentation": "POST /auth/refresh — Renova JWT expirado",
+      "method": "post",
+      "endpoint": "/auth/refresh",
+      "responses": [
+        {
+          "uuid": "550e8400-e29b-41d4-a716-446655440005",
+          "body": "{\n  \"token\": \"eyJhbGciOiJub25lIiwidHlwIjoiSldUIn0.eyJzdWIiOiJ1c2VyLTEyMyIsImVtYWlsIjoidGVzdGVAdGVzdGUuY29tLmJyIiwiaWF0IjoxNjI3NDk2ODAwLCJleHAiOjE2Mjc1ODMyMDB9.\"\n}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "Token Renovado",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "default": true,
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "type": "http",
+      "responseMode": null,
+      "streamingMode": null,
+      "streamingInterval": 0
+    },
+    {
+      "uuid": "550e8400-e29b-41d4-a716-446655440006",
+      "documentation": "POST /auth/logout — Invalida sessão",
+      "method": "post",
+      "endpoint": "/auth/logout",
+      "responses": [
+        {
+          "uuid": "550e8400-e29b-41d4-a716-446655440007",
+          "body": "{\n  \"status\": \"logged_out\"\n}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "Sucesso",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "default": true,
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "type": "http",
+      "responseMode": null,
+      "streamingMode": null,
+      "streamingInterval": 0
     }
   ],
   "rootChildren": [
@@ -336,6 +468,18 @@
     {
       "type": "route",
       "uuid": "4ec38ab2-7aaa-4904-852a-fad8c5e0138d"
+    },
+    {
+      "type": "route",
+      "uuid": "550e8400-e29b-41d4-a716-446655440001"
+    },
+    {
+      "type": "route",
+      "uuid": "550e8400-e29b-41d4-a716-446655440004"
+    },
+    {
+      "type": "route",
+      "uuid": "550e8400-e29b-41d4-a716-446655440006"
     }
   ],
   "proxyMode": false,

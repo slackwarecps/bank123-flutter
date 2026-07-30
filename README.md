@@ -269,6 +269,99 @@ flutter build apk --dart-define=API_BASE_URL=https://bank123-main-297cd30.d2.zup
 
 ---
 
+## 🔐 Modos Duplos de Autenticação (Novo!)
+
+O Bank123 suporta **três modos de autenticação** para atender diferentes cenários de desenvolvimento e teste:
+
+### 🟢 Modo 1: Produção (Firebase) — **PADRÃO**
+
+Usa autenticação real do Firebase. Recomendado para simulação de produção.
+
+```bash
+# Executar normalmente (sem --dart-define AUTH_MODE)
+flutter run --dart-define=API_BASE_URL=https://bank123-main-297cd30.d2.zuplo.dev
+
+# Ou com VS Code
+# Selecione "bank123" em Run and Debug
+```
+
+**Características:**
+- ✅ Firebase SDK inicializa normalmente
+- ✅ Login com credenciais Firebase reais
+- ✅ Tokens JWT assinados com chave privada Firebase
+- ✅ Produção segura (zero mudanças de comportamento)
+
+---
+
+### 🟡 Modo 2: Desenvolvimento (Basic Auth via Mockoon) — **NOVO**
+
+Testa o app **isolado de Firebase**, usando HTTP endpoints mock (ideal para CI/CD e E2E automatizado).
+
+```bash
+# Android Emulator
+flutter run --dart-define=AUTH_MODE=basic \
+  --dart-define=API_BASE_URL=http://10.0.2.2:8089
+
+# iOS Simulator / Web
+flutter run --dart-define=AUTH_MODE=basic \
+  --dart-define=API_BASE_URL=http://localhost:8089
+
+# Com auto-login (pré-preenche credenciais)
+flutter run --dart-define=AUTH_MODE=basic \
+  --dart-define=API_BASE_URL=http://10.0.2.2:8089 \
+  --dart-define=AUTO_LOGIN=true
+```
+
+**Características:**
+- ✅ Firebase SDK **não inicializa** (zero network)
+- ✅ Login via HTTP (endpoints `/auth/login`, `/auth/refresh`, `/auth/logout`)
+- ✅ Tokens JWT sem assinatura criptográfica (suficiente para testes)
+- ✅ Auto-refresh de tokens expirados
+- ✅ Totalmente offline se Mockoon estiver rodando localmente
+- ✅ **Ideal para testes E2E, CI/CD, desenvolvimento isolado**
+
+**Como rodar Mockoon:**
+```bash
+# Via CLI
+npx mockoon-cli start --data bff-mockoon/bff-bank123.json
+
+# Ou abra o arquivo bff-mockoon/bff-bank123.json no Mockoon Desktop
+```
+
+**Credenciais padrão:**
+- Email: `teste@teste.com.br`
+- Senha: `teste123`
+
+Para mais detalhes, veja [bff-mockoon/README.md](bff-mockoon/README.md).
+
+---
+
+### 🔵 Modo 3: Testes Unitários (USE_MOCK=true)
+
+Testa o app **completamente offline**, sem Firebase nem Mockoon.
+
+```bash
+flutter run --dart-define=USE_MOCK=true
+```
+
+**Características:**
+- ✅ Nenhuma chamada de rede
+- ✅ Firebase e BFF mockados em memória
+- ✅ Ideal para testes unitários rápidos
+- ⚠️ Não testa integração com servidor real
+
+---
+
+### Resumo: Qual modo usar?
+
+| Cenário | Modo | Comando |
+|---------|------|---------|
+| Produção / Simulação real | Firebase (padrão) | `flutter run` |
+| Testes E2E / CI/CD / Offline | Basic Auth | `flutter run --dart-define=AUTH_MODE=basic ...` |
+| Testes unitários rápidos | Mock | `flutter run --dart-define=USE_MOCK=true` |
+
+---
+
 ## 🛠️ Documentação Técnica Detalhada
 
 Para mais detalhes sobre padrões de código, estrutura de diretórios e guias de contribuição, consulte:
