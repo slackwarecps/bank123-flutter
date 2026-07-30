@@ -141,6 +141,7 @@ class LoginController extends GetxController {
       Get.offAllNamed('/home-page');
     } catch (e) {
       String errorMessage = "E-mail ou senha inválidos ou erro de conexão.";
+      String errorDetails = e.toString();
 
       if (e is ConnectivityError) {
         errorMessage = e.message;
@@ -150,17 +151,22 @@ class LoginController extends GetxController {
         errorMessage = e.message;
       } else if (e.toString().contains('firebase_auth')) {
         errorMessage = "E-mail ou senha inválidos.";
+      } else if (e.toString().contains('Connection refused')) {
+        errorMessage = "Servidor não alcançável. Verifique API_BASE_URL e se o Mockoon está rodando.";
+      } else if (e.toString().contains('Connection timed out')) {
+        errorMessage = "Conexão com timeout. Servidor muito lento ou indisponível.";
       }
 
-      developer.log('Login error: ${e.runtimeType} - $errorMessage', name: 'LoginController', error: e);
+      developer.log('Login error: ${e.runtimeType} - $errorMessage\nDetalhes: $errorDetails', name: 'LoginController', error: e);
 
       if (!Get.testMode) {
         Get.snackbar(
           "Falha no Login",
-          errorMessage,
+          "$errorMessage\n\n(${e.runtimeType})",
           backgroundColor: Colors.red,
           colorText: Colors.white,
           snackPosition: SnackPosition.BOTTOM,
+          duration: const Duration(seconds: 5),
         );
       }
     } finally {
