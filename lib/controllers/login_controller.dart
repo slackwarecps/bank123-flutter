@@ -67,12 +67,14 @@ class LoginController extends GetxController {
 
   Future<void> login() async {
     if (emailController.text.isEmpty || passwordController.text.isEmpty) {
-      Get.snackbar(
-        "Erro",
-        "Por favor, preencha email e senha.",
-        backgroundColor: Colors.redAccent,
-        colorText: Colors.white,
-      );
+      if (!Get.testMode) {
+        Get.snackbar(
+          "Erro",
+          "Por favor, preencha email e senha.",
+          backgroundColor: Colors.redAccent,
+          colorText: Colors.white,
+        );
+      }
       return;
     }
 
@@ -131,13 +133,15 @@ class LoginController extends GetxController {
          errorMessage = "E-mail ou senha inválidos.";
       }
 
-      Get.snackbar(
-        "Falha no Login",
-        errorMessage,
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-        snackPosition: SnackPosition.BOTTOM,
-      );
+      if (!Get.testMode) {
+        Get.snackbar(
+          "Falha no Login",
+          errorMessage,
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+          snackPosition: SnackPosition.BOTTOM,
+        );
+      }
     } finally {
       isLoading.value = false;
     }

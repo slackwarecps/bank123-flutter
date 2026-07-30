@@ -46,10 +46,17 @@
     "dart.debugSdkLibraries": false,
     "dart.previewFlutterUiGuides": true,
     "dart.closingLabels": true,
+    "dart.analysisExcludedFolders": [
+        "ios/.symlinks",
+        "macos/Flutter/ephemeral",
+        "**/build"
+    ],
 
     "files.exclude": {
         "**/.dart_tool": true,
-        "**/build": true
+        "**/build": true,
+        "**/ios/.symlinks": true,
+        "**/macos/Flutter/ephemeral": true
     },
     "search.exclude": {
         "**/.dart_tool": true,
