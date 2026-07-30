@@ -1,6 +1,12 @@
 import 'package:bank123/services/auth_service.dart';
 
 class MockAuthService implements IAuthService {
+  // Um Token Mock que parece um JWT real para não quebrar o JwtDecoder
+  static const String _mockJwt = 
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9."
+      "eyJzdWIiOiJtb2NrLXVpZC0xMjMiLCJlbWFpbCI6InRlc3RlQHRlc3RlLmNvbS5iciIsImlhdCI6MTcxMzU2MDAwMCwiZXhwIjoxODEzNTYwMDAwLCJiYW5rMTIzL2p3dC9jbGFpbXMiOnsibnVtZXJvY29udGEiOiIxMjM0NTYiLCJwZXJmaWwiOiJBRE1JTiJ9fQ==."
+      "signature";
+
   @override
   Future<AuthResult> signInWithEmailAndPassword(String email, String password) async {
     // Simula latência de rede
@@ -10,7 +16,7 @@ class MockAuthService implements IAuthService {
       return AuthResult(
         uid: "mock-uid-123",
         email: email,
-        token: "eyMockToken.Header.Payload.Signature",
+        token: _mockJwt,
         claims: {
           "bank123/jwt/claims": {
             "numeroconta": "123456",
@@ -33,6 +39,6 @@ class MockAuthService implements IAuthService {
 
   @override
   Future<String?> getIdToken() async {
-    return "eyMockToken.Header.Payload.Signature";
+    return _mockJwt;
   }
 }

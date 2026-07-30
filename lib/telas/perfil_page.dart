@@ -52,6 +52,7 @@ class PerfilPage extends StatelessWidget {
                   ),
                   const SizedBox(height: 24),
                   
+                  _buildInfoCard(context, 'Nome do Usuário', controller.nome.value),
                   _buildInfoCard(context, 'Email (Firebase)', controller.email.value),
                   _buildInfoCard(context, 'UID', controller.uid.value),
                   _buildInfoCard(context, 'Emitido em (iat)', controller.iat.value),

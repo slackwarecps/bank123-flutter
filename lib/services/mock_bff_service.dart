@@ -79,7 +79,7 @@ class MockBffService implements IBffService {
         "timestamp": DateTime.now().toIso8601String(),
         "mensagem": "Transferência simulada com sucesso!"
       },
-      statusCode: 200,
+      statusCode: 201,
     );
   }
 }
