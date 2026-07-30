@@ -1,0 +1,23 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "adb-reverse-mockoon",
+            "type": "shell",
+            "command": "adb",
+            "args": [
+                "reverse",
+                "tcp:8089",
+                "tcp:8089"
+            ],
+            "presentation": {
+                "echo": true,
+                "reveal": "silent"
+            },
+            "problemMatcher": [],
+            "runOptions": {
+                "runOn": "folderOpen"
+            }
+        }
+    ]
+}

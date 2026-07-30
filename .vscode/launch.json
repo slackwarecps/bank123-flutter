@@ -23,6 +23,18 @@
             ]
         },
         {
+            "name": "bank123-mockoon",
+            "request": "launch",
+            "type": "dart",
+            "preLaunchTask": "adb-reverse-mockoon",
+            "args": [
+                "--dart-define",
+                "API_BASE_URL=http://localhost:8089",
+                "--dart-define",
+                "AUTO_LOGIN=true"
+            ]
+        },
+        {
             "name": "bank123 (profile mode)",
             "request": "launch",
             "type": "dart",

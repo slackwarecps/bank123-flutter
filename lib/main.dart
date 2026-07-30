@@ -1,5 +1,3 @@
-
-
 import 'package:bank123/bindings/initial_binding.dart';
 import 'package:bank123/bindings/login_binding.dart';
 
@@ -28,13 +26,13 @@ Future<bool> checkFridaMemoryTrace() async {
   try {
     final file = File('/proc/self/maps');
     if (!file.existsSync()) return false;
-    
+
     final content = await file.readAsString();
     final lowerContent = content.toLowerCase();
-    
+
     // Assinaturas comuns do Frida e injetores
-    if (lowerContent.contains('frida') || 
-        lowerContent.contains('gum-js-loop') || 
+    if (lowerContent.contains('frida') ||
+        lowerContent.contains('gum-js-loop') ||
         lowerContent.contains('gdbus') ||
         lowerContent.contains('linjector')) {
       debugPrint("Assinatura do Frida detectada na memória!");
@@ -66,7 +64,11 @@ Future<bool> isFridaDetected() async {
 
   // 2. Verificar porta padrão do Frida (27042)
   try {
-    final socket = await Socket.connect('127.0.0.1', 27042, timeout: const Duration(milliseconds: 500));
+    final socket = await Socket.connect(
+      '127.0.0.1',
+      27042,
+      timeout: const Duration(milliseconds: 500),
+    );
     socket.destroy();
     debugPrint("Frida detectado pela porta 27042");
     return true;
@@ -96,7 +98,7 @@ void startActiveProtection() {
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  
+
   // Pass all uncaught "fatal" errors from the framework to Crashlytics
   FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
 
@@ -110,7 +112,7 @@ void main() async {
   try {
     bool isJailBroken = await SafeDevice.isJailBroken;
     bool isFridaFound = await isFridaDetected();
-    
+
     isSecurityViolation = isJailBroken || isFridaFound;
   } catch (e) {
     debugPrint("Erro ao verificar segurança: $e");
@@ -131,6 +133,7 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
+      debugShowCheckedModeBanner: true,
       initialBinding: InitialBinding(),
       unknownRoute: GetPage(
         name: '/notfound',
@@ -142,7 +145,11 @@ class MainApp extends StatelessWidget {
         GetPage(name: '/jailbreak', page: () => const JailbreakPage()),
         GetPage(name: '/', page: () => LoginScreen(), binding: LoginBinding()),
         GetPage(name: '/home-page', page: () => const HomePage()),
-        GetPage(name: '/login', page: () => LoginScreen(), binding: LoginBinding()),
+        GetPage(
+          name: '/login',
+          page: () => LoginScreen(),
+          binding: LoginBinding(),
+        ),
         GetPage(name: '/cadastro', page: () => CadastroPage()),
         GetPage(name: '/perfil', page: () => const PerfilPage()),
         GetPage(name: '/configuracoes', page: () => const ConfiguracaoPage()),

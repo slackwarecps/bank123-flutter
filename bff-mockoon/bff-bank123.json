@@ -1,0 +1,370 @@
+{
+  "uuid": "a2afd387-b8ee-4a64-91f0-b11b9aedfcdd",
+  "lastMigration": 33,
+  "name": "Bank123 BFF Mock",
+  "endpointPrefix": "",
+  "latency": 0,
+  "port": 8089,
+  "hostname": "0.0.0.0",
+  "routes": [
+    {
+      "uuid": "a6867994-2508-4af1-baca-9bcbd6e483f2",
+      "documentation": "GET /usuario/v1/perfil — Retorna dados do perfil do usuário",
+      "method": "get",
+      "endpoint": "/bff-bank123/usuario/v1/perfil",
+      "responses": [
+        {
+          "uuid": "da37b4fd-e265-41d5-a847-127d41c0ff59",
+          "body": "{\n  \"nome\": \"Fabão (Mock User)\",\n  \"email\": \"teste@teste.com.br\",\n  \"ultimoAcesso\": \"2026-07-30T12:00:00.000\",\n  \"metadata\": {\n    \"isMock\": true,\n    \"tccStatus\": \"Running local\"\n  }\n}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "Sucesso",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "e0401b3e-425c-45e3-b455-9b34352fd031",
+          "body": "{\"error\": \"Token inválido ou expirado\"}",
+          "latency": 0,
+          "statusCode": 401,
+          "label": "Não autenticado",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "dc75ac2e-5c97-426c-9125-09d58377e175",
+          "body": "{\"error\": \"Erro interno no servidor\"}",
+          "latency": 0,
+          "statusCode": 500,
+          "label": "Erro do servidor",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "responseMode": null,
+      "type": "http",
+      "streamingMode": null,
+      "streamingInterval": 0
+    },
+    {
+      "uuid": "b42069a5-bb94-4c7e-9ca2-3ff35f5089f7",
+      "documentation": "GET /extrato/v1/saldo — Retorna saldo da conta",
+      "method": "get",
+      "endpoint": "/bff-bank123/extrato/v1/saldo",
+      "responses": [
+        {
+          "uuid": "0d2e180b-cdb2-46e1-92b3-568ca0a39c21",
+          "body": "{\n  \"saldo\": 9999999.99,\n  \"moeda\": \"BRL\",\n  \"numeroConta\": \"123456-7\",\n  \"dataAtualizacao\": \"2026-07-30T12:00:00.000\"\n}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "Sucesso",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "551257cf-457a-401f-8711-3de3474cd885",
+          "body": "{\"error\": \"Erro ao buscar saldo\"}",
+          "latency": 0,
+          "statusCode": 500,
+          "label": "Erro do servidor",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "responseMode": null,
+      "type": "http",
+      "streamingMode": null,
+      "streamingInterval": 0
+    },
+    {
+      "uuid": "d07ef3a8-fc26-4456-ad83-bf5f52b71ad4",
+      "documentation": "GET /extrato/v1/listagem — Retorna lista de transações",
+      "method": "get",
+      "endpoint": "/bff-bank123/extrato/v1/listagem",
+      "responses": [
+        {
+          "uuid": "93d4ad54-886f-4997-bca0-0758ee1d4e46",
+          "body": "[\n  {\n    \"id\": \"1\",\n    \"dataTransacao\": \"2026-07-29T12:00:00.000\",\n    \"destino\": \"Café Starbucks (Mockoon)\",\n    \"valorTransacao\": 25.5,\n    \"operacao\": \"TRANSFERENCIA_SAIDA\",\n    \"categoria\": \"ALIMENTACAO\"\n  },\n  {\n    \"id\": \"2\",\n    \"dataTransacao\": \"2026-07-28T12:00:00.000\",\n    \"destino\": \"Amigo Depósito (Mockoon)\",\n    \"valorTransacao\": 150,\n    \"operacao\": \"ENTRADA\",\n    \"categoria\": \"TRANSFERENCIA\"\n  },\n  {\n    \"id\": \"3\",\n    \"dataTransacao\": \"2026-07-27T12:00:00.000\",\n    \"destino\": \"Aluguel Apartamento (Mockoon)\",\n    \"valorTransacao\": 2500,\n    \"operacao\": \"SAIDA\",\n    \"categoria\": \"MORADIA\"\n  },\n  {\n    \"id\": \"4\",\n    \"dataTransacao\": \"2026-07-26T12:00:00.000\",\n    \"destino\": \"Salário TCC Bank123 (Mockoon)\",\n    \"valorTransacao\": 8000,\n    \"operacao\": \"ENTRADA\",\n    \"categoria\": \"SALARIO\"\n  }\n]",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "Sucesso com transações",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "3eab2a54-ae92-49a3-9305-5232cca0482e",
+          "body": "[]",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "Sucesso vazio (extrato zerado)",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "60535e0c-7fbb-4f83-9869-2f47bc185638",
+          "body": "{\"error\": \"Erro ao buscar extrato\"}",
+          "latency": 0,
+          "statusCode": 500,
+          "label": "Erro do servidor",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "responseMode": null,
+      "type": "http",
+      "streamingMode": null,
+      "streamingInterval": 0
+    },
+    {
+      "uuid": "4ec38ab2-7aaa-4904-852a-fad8c5e0138d",
+      "documentation": "POST /movimentacoes/v1/transferencia-conta — Realiza transferência entre contas",
+      "method": "post",
+      "endpoint": "/bff-bank123/movimentacoes/v1/transferencia-conta",
+      "responses": [
+        {
+          "uuid": "18d90cc4-33df-41cc-93df-0650258012e4",
+          "body": "{\n  \"status\": \"SUCCESS\",\n  \"transactionId\": \"mock-trx-999888777\",\n  \"timestamp\": \"2026-07-30T12:00:00.000\",\n  \"mensagem\": \"Transferência simulada com sucesso! Mockoon\"\n}",
+          "latency": 0,
+          "statusCode": 201,
+          "label": "Criado com sucesso",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "d9c62181-e507-49a5-88ae-351b4372b481",
+          "body": "{\"status\": \"ERROR\", \"mensagem\": \"Saldo insuficiente\"}",
+          "latency": 0,
+          "statusCode": 400,
+          "label": "Saldo insuficiente",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "8b47a19a-39f9-4d38-9a0e-d63f04468418",
+          "body": "{\"status\": \"ERROR\", \"mensagem\": \"Erro ao processar transferência\"}",
+          "latency": 0,
+          "statusCode": 500,
+          "label": "Erro do servidor",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "responseMode": null,
+      "type": "http",
+      "streamingMode": null,
+      "streamingInterval": 0
+    }
+  ],
+  "rootChildren": [
+    {
+      "type": "route",
+      "uuid": "a6867994-2508-4af1-baca-9bcbd6e483f2"
+    },
+    {
+      "type": "route",
+      "uuid": "b42069a5-bb94-4c7e-9ca2-3ff35f5089f7"
+    },
+    {
+      "type": "route",
+      "uuid": "d07ef3a8-fc26-4456-ad83-bf5f52b71ad4"
+    },
+    {
+      "type": "route",
+      "uuid": "4ec38ab2-7aaa-4904-852a-fad8c5e0138d"
+    }
+  ],
+  "proxyMode": false,
+  "proxyRemovePrefix": false,
+  "proxyHost": "",
+  "tlsOptions": {
+    "enabled": false,
+    "type": "CERT",
+    "pfxPath": "",
+    "certPath": "",
+    "keyPath": "",
+    "caPath": "",
+    "passphrase": ""
+  },
+  "cors": true,
+  "headers": [],
+  "proxyReqHeaders": [
+    {
+      "key": "",
+      "value": ""
+    }
+  ],
+  "proxyResHeaders": [
+    {
+      "key": "",
+      "value": ""
+    }
+  ],
+  "data": [],
+  "folders": [],
+  "callbacks": []
+}

@@ -28,10 +28,12 @@ class LoginController extends GetxController {
 
   void _autoFillMockCredentials() {
     const isMock = String.fromEnvironment('USE_MOCK') == 'true';
-    if (isMock) {
+    const autoLogin = String.fromEnvironment('AUTO_LOGIN') == 'true';
+
+    if (isMock || autoLogin) {
       emailController.text = "teste@teste.com.br";
       passwordController.text = "teste123";
-      developer.log('MOCK MODE: Credenciais preenchidas automaticamente.', name: 'LoginController');
+      developer.log('Auto-fill: Credenciais preenchidas automaticamente.', name: 'LoginController');
     }
   }
   
