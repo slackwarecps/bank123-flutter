@@ -327,7 +327,7 @@
       "responses": [
         {
           "uuid": "550e8400-e29b-41d4-a716-446655440002",
-          "body": "{\n  \"token\": \"eyJhbGciOiJub25lIiwidHlwIjoiSldUIn0.eyJzdWIiOiJ1c2VyLTEyMyIsImVtYWlsIjoidGVzdGVAdGVzdGUuY29tLmJyIiwiaWF0IjoxNjI3NDEwNDAwLCJleHAiOjE2Mjc0OTY4MDB9.\"\n}",
+          "body": "{\n  \"token\": \"eyJhbGciOiAibm9uZSIsICJ0eXAiOiAiSldUIn0.eyJzdWIiOiAidXNlci0xMjMiLCAiZW1haWwiOiAidGVzdGVAdGVzdGUuY29tLmJyIiwgImlhdCI6IDE3ODU0NTU1MjQsICJleHAiOiAxNzg4MDQ3NTI0fQ.\"\n}",
           "latency": 0,
           "statusCode": 200,
           "label": "Sucesso",
@@ -387,7 +387,7 @@
       "responses": [
         {
           "uuid": "550e8400-e29b-41d4-a716-446655440005",
-          "body": "{\n  \"token\": \"eyJhbGciOiJub25lIiwidHlwIjoiSldUIn0.eyJzdWIiOiJ1c2VyLTEyMyIsImVtYWlsIjoidGVzdGVAdGVzdGUuY29tLmJyIiwiaWF0IjoxNjI3NDk2ODAwLCJleHAiOjE2Mjc1ODMyMDB9.\"\n}",
+          "body": "{\n  \"token\": \"eyJhbGciOiAibm9uZSIsICJ0eXAiOiAiSldUIn0.eyJzdWIiOiAidXNlci0xMjMiLCAiZW1haWwiOiAidGVzdGVAdGVzdGUuY29tLmJyIiwgImlhdCI6IDE3ODU0NTU1MjQsICJleHAiOiAxNzg4MDQ3NTI0fQ.\"\n}",
           "latency": 0,
           "statusCode": 200,
           "label": "Token Renovado",

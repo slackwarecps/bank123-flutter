@@ -16,7 +16,7 @@ class HttpBffService implements IBffService {
   final _uuid = const Uuid();
 
   // URL Base do BFF
-  final String _baseUrl = const String.fromEnvironment('API_BASE_URL', defaultValue: 'https://dummy.com.dev');
+  final String _baseUrl = const String.fromEnvironment('API_BASE_URL', defaultValue: 'http://192.168.1.104:8089');
 
   // Fingerprint SHA-256 do Certificado (Obtido via OpenSSL)
   // RNF04 - Segurança (Prevenção MITM)
@@ -30,8 +30,8 @@ class HttpBffService implements IBffService {
   HttpBffService() {
     _dio = Dio(BaseOptions(
       baseUrl: _baseUrl,
-      connectTimeout: const Duration(seconds: 10),
-      receiveTimeout: const Duration(seconds: 10),
+      connectTimeout: const Duration(minutes: 2),
+      receiveTimeout: const Duration(minutes: 2),
     ));
 
     // Configuração do SSL Pinning (RNF04)

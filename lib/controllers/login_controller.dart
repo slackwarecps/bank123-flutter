@@ -161,12 +161,15 @@ class LoginController extends GetxController {
 
       if (!Get.testMode) {
         Get.snackbar(
-          "Falha no Login",
+          "❌ Falha no Login",
           "$errorMessage\n\n(${e.runtimeType})",
           backgroundColor: Colors.red,
           colorText: Colors.white,
           snackPosition: SnackPosition.BOTTOM,
-          duration: const Duration(seconds: 5),
+          duration: const Duration(seconds: 10),
+          margin: const EdgeInsets.all(16),
+          maxWidth: 400,
+          borderRadius: 8,
         );
       }
     } finally {

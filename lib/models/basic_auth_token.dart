@@ -16,16 +16,25 @@ class BasicAuthToken {
   });
 
   factory BasicAuthToken.fromJwt(String jwtToken) {
-    final decoded = JwtDecoder.decode(jwtToken);
-    return BasicAuthToken(
-      token: jwtToken,
-      expiresAt: DateTime.fromMillisecondsSinceEpoch(
-        (decoded['exp'] as int) * 1000,
-      ),
-      userId: decoded['sub'] as String,
-      email: decoded['email'] as String,
-      claims: decoded,
-    );
+    try {
+      final decoded = JwtDecoder.decode(jwtToken);
+
+      if (!decoded.containsKey('exp') || !decoded.containsKey('sub') || !decoded.containsKey('email')) {
+        throw FormatException('Token JWT inválido: campos obrigatórios ausentes');
+      }
+
+      return BasicAuthToken(
+        token: jwtToken,
+        expiresAt: DateTime.fromMillisecondsSinceEpoch(
+          (decoded['exp'] as int) * 1000,
+        ),
+        userId: decoded['sub'] as String,
+        email: decoded['email'] as String,
+        claims: decoded,
+      );
+    } catch (e) {
+      throw FormatException('Erro ao decodificar JWT: $e');
+    }
   }
 
   bool get isExpired => DateTime.now().isAfter(expiresAt);

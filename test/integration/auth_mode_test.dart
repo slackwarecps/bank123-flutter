@@ -2,7 +2,6 @@ import 'package:bank123/bindings/initial_binding.dart';
 import 'package:bank123/services/auth_service.dart';
 import 'package:bank123/services/basic_auth_service.dart';
 import 'package:bank123/services/firebase_auth_service.dart';
-import 'package:bank123/services/mock_auth_service.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get/get.dart';
 
@@ -47,23 +46,26 @@ void main() {
       expect(authService, isNotNull);
     });
 
-    test('BasicAuthService e FirebaseAuthService implementam mesma interface', () {
-      final basicAuth = BasicAuthService();
-      final firebaseAuth = FirebaseAuthService();
+    test(
+      'BasicAuthService e FirebaseAuthService implementam mesma interface',
+      () {
+        final basicAuth = BasicAuthService();
+        final firebaseAuth = FirebaseAuthService();
 
-      expect(basicAuth, isA<IAuthService>());
-      expect(firebaseAuth, isA<IAuthService>());
+        expect(basicAuth, isA<IAuthService>());
+        expect(firebaseAuth, isA<IAuthService>());
 
-      // Both implement required methods
-      expect(basicAuth.signInWithEmailAndPassword, isNotNull);
-      expect(basicAuth.signOut, isNotNull);
-      expect(basicAuth.getIdToken, isNotNull);
-      expect(basicAuth.isAuthenticated, isNotNull);
+        // Both implement required methods
+        expect(basicAuth.signInWithEmailAndPassword, isNotNull);
+        expect(basicAuth.signOut, isNotNull);
+        expect(basicAuth.getIdToken, isNotNull);
+        expect(basicAuth.isAuthenticated, isNotNull);
 
-      expect(firebaseAuth.signInWithEmailAndPassword, isNotNull);
-      expect(firebaseAuth.signOut, isNotNull);
-      expect(firebaseAuth.getIdToken, isNotNull);
-      expect(firebaseAuth.isAuthenticated, isNotNull);
-    });
+        expect(firebaseAuth.signInWithEmailAndPassword, isNotNull);
+        expect(firebaseAuth.signOut, isNotNull);
+        expect(firebaseAuth.getIdToken, isNotNull);
+        expect(firebaseAuth.isAuthenticated, isNotNull);
+      },
+    );
   });
 }

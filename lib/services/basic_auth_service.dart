@@ -19,10 +19,10 @@ class BasicAuthService implements IAuthService {
 
   BasicAuthService() {
     _dio = Dio(BaseOptions(
-      baseUrl: String.fromEnvironment('API_BASE_URL', defaultValue: 'http://10.0.2.2:8089'),
-      connectTimeout: const Duration(seconds: 30),
-      receiveTimeout: const Duration(seconds: 30),
-      sendTimeout: const Duration(seconds: 30),
+      baseUrl: String.fromEnvironment('API_BASE_URL', defaultValue: 'http://192.168.1.104:8089'),
+      connectTimeout: const Duration(minutes: 2),
+      receiveTimeout: const Duration(minutes: 2),
+      sendTimeout: const Duration(minutes: 2),
     ));
   }
 
@@ -82,11 +82,16 @@ class BasicAuthService implements IAuthService {
       }
       if (e.type == DioExceptionType.connectionTimeout ||
           e.type == DioExceptionType.unknown) {
-        throw ConnectivityError(
-          'Servidor de autenticação indisponível. Verifique se Mockoon está rodando em :8089',
-        );
+        final errorMsg = 'Servidor indisponível\nURL: ${_dio.options.baseUrl}/auth/login';
+        print('[BasicAuthService] ❌ $errorMsg');
+        throw ConnectivityError(errorMsg);
       }
-      throw ConnectivityError('Erro de conexão. Verifique sua internet');
+      final errorMsg = 'Erro de conexão\nURL: ${_dio.options.baseUrl}';
+      print('[BasicAuthService] ❌ $errorMsg');
+      throw ConnectivityError(errorMsg);
+    } on FormatException catch (e) {
+      print('[BasicAuthService] ❌ FormatException: $e');
+      throw InvalidCredentialsError('Resposta inválida do servidor: ${e.message}');
     } catch (e) {
       print('[BasicAuthService] ❌ Unexpected error: $e');
       rethrow;
