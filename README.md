@@ -62,7 +62,139 @@ Para dificultar a engenharia reversa estática:
 
 O projeto adota uma arquitetura **Cloud Native**, focada em segurança e separação de responsabilidades.
 
-### Diagrama de Integração
+### Diagrama C4 - Level 1 (Contexto)
+
+```mermaid
+C4Context
+  title Diagrama de Contexto (Level 1) - Sistema Bank123
+
+  Person(customer, "Cliente", "Um cliente do banco que deseja realizar operações financeiras seguras via aplicativo mobile.")
+  
+  System(bank123, "Sistema Bank123", "Sistema de mobile banking que permite visualizar saldo, extrato e realizar transferências, com proteções avançadas contra engenharia reversa.")
+
+  System_Ext(firebase, "Firebase Authentication", "Serviço de nuvem para gestão de identidade e autenticação de usuários (JWT).")
+  System_Ext(gateway, "API Gateway / BFF", "Ponto de entrada único para as APIs, responsável por segurança e orquestração.")
+
+  Rel(customer, bank123, "Realiza operações bancárias e consultas")
+  Rel(bank123, firebase, "Solicita autenticação e valida tokens")
+  Rel(bank123, gateway, "Consome serviços de negócio através de")
+```
+
+### Diagrama C4 - Level 2 (Containers)
+
+Este diagrama detalha os componentes internos do sistema Bank123 e como eles se comunicam.
+
+```mermaid
+C4Container
+  title Diagrama de Containers (Level 2) - Sistema Bank123
+
+  Person(customer, "Cliente", "Um cliente do banco que deseja realizar operações financeiras seguras via aplicativo mobile.")
+
+  System_Boundary(bank123_boundary, "Sistema Bank123") {
+    Container(app, "Aplicativo Mobile", "Flutter", "Interface do usuário que implementa mecanismos de defesa (Anti-Frida, Ofuscação) e consome APIs do BFF.")
+    Container(bff, "BFF (Backend For Frontend)", "Spring Boot, Java", "Centraliza a lógica de negócio, validação de segurança e orquestração de serviços.")
+    ContainerDb(db, "Banco de Dados", "PostgreSQL", "Armazena informações transacionais, perfis de usuários e registros financeiros.")
+  }
+
+  System_Ext(firebase, "Firebase Authentication", "Serviço de nuvem para gestão de identidade e autenticação (JWT).")
+
+  Rel(customer, app, "Usa o aplicativo para operações bancárias")
+  Rel(app, bff, "Faz chamadas de API (Saldo, Extrato, Pagamentos)", "HTTPS/JSON")
+  Rel(app, firebase, "Realiza login e obtém Token JWT", "HTTPS")
+  Rel(bff, db, "Persiste e consulta dados financeiros", "JDBC/SQL")
+  Rel(bff, firebase, "Verifica a validade e claims do Token JWT", "HTTPS")
+```
+
+### Diagrama C4 - Level 3 (Componentes: Aplicativo Mobile)
+
+Este diagrama detalha a estrutura interna do aplicativo Flutter, destacando as camadas de lógica, segurança e integração.
+
+```mermaid
+C4Component
+  title Diagrama de Componentes (Level 3) - Aplicativo Mobile Flutter
+
+  Container(bff, "BFF (Backend For Frontend)", "Spring Boot", "Fornece APIs seguras para o aplicativo.")
+  System_Ext(firebase, "Firebase Authentication", "Serviço de identidade e autenticação JWT.")
+
+  Container_Boundary(app_boundary, "Aplicativo Mobile Flutter") {
+    Component(ui, "Interface do Usuário (UI)", "GetX Screens/Widgets", "Telas do app (Home, Login, Extrato) que reagem às mudanças de estado.")
+    Component(controllers, "Controladores de Estado", "GetX Controllers", "Gerencia o fluxo de dados, lógica de navegação e orquestra os serviços.")
+    Component(auth_service, "Serviço de Autenticação", "Dart Class", "Encapsula a integração com Firebase e gerencia o ciclo de vida da sessão.")
+    Component(api_service, "Cliente de API (Dio)", "Dio HTTP Client", "Responsável pelas chamadas REST ao BFF, incluindo SSL Pinning e Interceptores de Segurança.")
+    Component(security_service, "Módulo de Autoproteção", "Services/Security", "Executa varreduras Anti-Frida, detecção de Root e integridade de memória.")
+    Component(secure_storage, "Armazenamento Seguro", "Secure Storage", "Persiste credenciais e identificadores sensíveis no Keystore/Keychain.")
+    Component(biometric_service, "Serviço de Biometria", "Local Auth", "Gerencia a autenticação via Digital ou FaceID.")
+  }
+
+  Rel(ui, controllers, "Notifica eventos de usuário e observa estado")
+  Rel(controllers, auth_service, "Solicita login/logout e validação de sessão")
+  Rel(controllers, api_service, "Requisita dados financeiros (Saldo, Extrato)")
+  Rel(controllers, security_service, "Assina monitoramento de ameaças")
+  Rel(controllers, biometric_service, "Solicita verificação biométrica")
+  
+  Rel(auth_service, firebase, "Autentica e recupera JWT", "HTTPS")
+  Rel(auth_service, secure_storage, "Grava/Lê tokens e chaves de sessão", "AES")
+  Rel(api_service, bff, "Chama endpoints protegidos com JWT", "HTTPS/JSON")
+  Rel(security_service, ui, "Ativa Kill Switch em caso de detecção", "Nativo")
+```
+
+### Diagrama C4 - Level 4 (Código: Camada de Segurança)
+
+Este nível detalha a estrutura de classes e as interações que compõem a **Defesa Ativa** e a **Segurança de Runtime** do aplicativo. É o coração técnico do TCC.
+
+```mermaid
+classDiagram
+    class SecurityController {
+        +isCompromised: RxBool
+        +onInit()
+        +startActiveDefense() : void
+        -terminateApp() : void
+    }
+
+    class SecurityService {
+        -checkers: List~ISecurityScanner~
+        +runAllChecks() : Future~bool~
+        +monitorThreats() : Stream~ThreatEvent~
+    }
+
+    class ISecurityScanner {
+        <<interface>>
+        +scan() : Future~bool~
+        +getThreatLevel() : int
+    }
+
+    class AntiFridaScanner {
+        -checkProcMaps() : bool
+        -checkFridaStatus() : bool
+        +scan() : Future~bool~
+    }
+
+    class RootDetectionScanner {
+        -checkBinaries() : bool
+        -checkSystemWrite() : bool
+        +scan() : Future~bool~
+    }
+
+    class SSLCertificatePinner {
+        -allowedHashes: List~String~
+        +validate(certificate) : bool
+    }
+
+    class SecureTokenManager {
+        -storage: FlutterSecureStorage
+        +saveToken(jwt) : Future
+        +getValidToken() : String
+    }
+
+    SecurityController "1" --> "1" SecurityService : Coordena
+    SecurityService "1" *-- "n" ISecurityScanner : Agrega
+    ISecurityScanner <|-- AntiFridaScanner : Implementa
+    ISecurityScanner <|-- RootDetectionScanner : Implementa
+    SecurityController ..> SSLCertificatePinner : Valida Conexão
+    SecurityController ..> SecureTokenManager : Protege Dados
+```
+
+### Diagrama de Integração Antigo
 ![Diagrama de Integração](image.png)
 
 ### Fluxo de Dados e Segurança
