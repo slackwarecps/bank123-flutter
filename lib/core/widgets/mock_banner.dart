@@ -9,21 +9,21 @@ class MockBanner extends StatelessWidget {
 
     return IgnorePointer(
       child: Positioned(
-        top: padding.top,
-        left: 0,
-        right: 0,
+        top: padding.top + 4,
+        right: 12,
         child: Container(
-          color: Colors.orange,
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          child: const Center(
-            child: Text(
-              'MOCK ATIVO',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 12,
-                fontWeight: FontWeight.bold,
-                letterSpacing: 0.5,
-              ),
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+          decoration: BoxDecoration(
+            color: Colors.orange,
+            borderRadius: BorderRadius.circular(4),
+          ),
+          child: const Text(
+            'MOCK',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 9,
+              fontWeight: FontWeight.bold,
+              letterSpacing: 0.3,
             ),
           ),
         ),
