@@ -12,6 +12,7 @@ import 'package:bank123/features/transferencia/transferencia_page.dart';
 import 'package:bank123/features/extrato/extrato_page.dart';
 import 'package:bank123/features/home/telas/home_page.dart';
 import 'package:bank123/core/telas/jailbreak_page.dart';
+import 'package:bank123/core/widgets/mock_banner.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -133,6 +134,8 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    const isMock = String.fromEnvironment('USE_MOCK') == 'true';
+
     return GetMaterialApp(
       debugShowCheckedModeBanner: true,
       initialBinding: InitialBinding(),
@@ -164,6 +167,15 @@ class MainApp extends StatelessWidget {
         useMaterial3: true,
         brightness: Brightness.light,
       ),
+      builder: (context, child) {
+        if (!isMock || child == null) return child ?? const SizedBox.shrink();
+        return Stack(
+          children: [
+            child,
+            const MockBanner(),
+          ],
+        );
+      },
     );
   }
 }
