@@ -213,6 +213,17 @@ class HttpBffService implements IBffService {
     }
   }
 
+  // 7. Chaves PIX
+  @override
+  Future<List<dynamic>> getChavesPix() async {
+    try {
+      final response = await _dio.get('/bff-bank123/pf/pix-chaves/v1/chaves');
+      return List<dynamic>.from(response.data);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   // Helper para formatar o fingerprint
   String _bytesToHex(List<int> bytes) {
     return bytes.map((byte) => byte.toRadixString(16).padLeft(2, '0').toUpperCase()).join(':');

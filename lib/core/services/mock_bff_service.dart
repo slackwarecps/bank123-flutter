@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 class MockBffService implements IBffService {
   // Flag para testar erros - mude para true para simular erro 422
   static bool simularErroServico = false;
+  static bool simularErroChaves = false;
   @override
   Future<dynamic> getPerfil() async {
     await Future.delayed(const Duration(milliseconds: 500));
@@ -139,5 +140,47 @@ class MockBffService implements IBffService {
         }
       ]
     };
+  }
+
+  @override
+  Future<List<dynamic>> getChavesPix() async {
+    await Future.delayed(const Duration(milliseconds: 600));
+
+    if (simularErroChaves) {
+      final dioException = DioException(
+        requestOptions: RequestOptions(path: '/bff-bank123/pf/pix-chaves/v1/chaves'),
+        response: Response(
+          requestOptions: RequestOptions(path: '/bff-bank123/pf/pix-chaves/v1/chaves'),
+          statusCode: 422,
+          data: {
+            "titulo": "Serviço de chaves PIX não disponível",
+            "code": 422,
+            "descricao": "Procure o atendimento para ativar este recurso"
+          },
+        ),
+      );
+      throw dioException;
+    }
+
+    return [
+      {
+        "id": "1",
+        "tipo": "E-mail",
+        "chave": "fabio.pereira@zup.com.br",
+        "dataCriacao": "2024-01-15T00:00:00.000Z"
+      },
+      {
+        "id": "2",
+        "tipo": "Chave Aleatória",
+        "chave": "4e810a2c-d32e-4be8-bf8e-b66944ccfff1",
+        "dataCriacao": "2024-02-20T00:00:00.000Z"
+      },
+      {
+        "id": "3",
+        "tipo": "CPF",
+        "chave": "123.456.789-10",
+        "dataCriacao": "2024-03-10T00:00:00.000Z"
+      }
+    ];
   }
 }

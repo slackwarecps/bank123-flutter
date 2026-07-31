@@ -28,7 +28,7 @@ class HomeBank extends StatelessWidget {
                       context,
                       Icons.pix,
                       'Pix',
-                      () => _showEmDesenvolvimento(context, 'Pix'),
+                      () => Get.toNamed('/chaves-pix'),
                     ),
                   ),
                 ),

@@ -9,6 +9,7 @@ import 'package:bank123/features/auth/telas/login.dart';
 import 'package:bank123/core/telas/pagina_nao_encontrada.dart';
 import 'package:bank123/core/telas/tela_de_erro.dart';
 import 'package:bank123/features/transferencia/transferencia_page.dart';
+import 'package:bank123/features/transferencia/chaves_pix/chaves_pix_page.dart';
 import 'package:bank123/features/extrato/extrato_page.dart';
 import 'package:bank123/features/home/telas/home_page.dart';
 import 'package:bank123/core/telas/jailbreak_page.dart';
@@ -159,6 +160,7 @@ class MainApp extends StatelessWidget {
         GetPage(name: '/configuracoes', page: () => const ConfiguracaoPage()),
         GetPage(name: '/error-page', page: () => TelaDeErro()),
         GetPage(name: '/transferencia', page: () => const TransferenciaPage()),
+        GetPage(name: '/chaves-pix', page: () => const ChavesPixPage()),
         GetPage(name: '/extrato', page: () => const ExtratoPage()),
       ],
       title: 'Bank 123',
