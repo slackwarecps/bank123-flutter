@@ -81,3 +81,237 @@ Controllers dependem das interfaces (`IAuthService`, `IBffService`) via `Get.fin
 - Classes: `PascalCase`; arquivos: `snake_case`; variáveis: `camelCase`.
 - Apenas Material 3 — use `Theme.of(context).colorScheme` ao invés de cores hardcoded (tema do app usa uma cor de seed vermelho/marrom).
 - Builds de release devem ser compilados com `--obfuscate --split-debug-info` (por README) para remover metadados de debug como parte da postura anti-reverse-engineering — mantenha isso em mente se mexer em scripts de build/CI.
+
+## Padrão: Telas com Estado, Sincronização e Tratamento de Erros
+
+Ao criar uma tela que carrega dados remotos (listas, detalhes, etc.), siga este padrão para garantir consistência e UX robusta. Use como referência as telas implementadas: **Notificações**, **Chaves PIX**, **Aba Serviço** (Home).
+
+### 1️⃣ Controller (GetxController)
+
+Adicione estes estados:
+```dart
+class MeuController extends GetxController {
+  final _bffService = Get.find<IBffService>();
+  
+  final dados = <MeuModel>[].obs;
+  final isLoading = false.obs;
+  final temErro = false.obs;
+  final erroTitulo = ''.obs;
+  final erroDescricao = ''.obs;
+  final erroStatusCode = 0.obs;
+
+  @override
+  void onInit() {
+    super.onInit();
+    carregarDados();
+  }
+
+  Future<void> carregarDados() async {
+    isLoading.value = true;
+    temErro.value = false;
+    try {
+      final response = await _bffService.getMeusDados();
+      dados.assignAll(/* parse response */);
+    } on DioException catch (e) {
+      _tratarErro(e);
+    } catch (e) {
+      temErro.value = true;
+      erroTitulo.value = 'Erro ao carregar';
+      erroDescricao.value = 'Ocorreu um erro inesperado.';
+      erroStatusCode.value = 500;
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  void _tratarErro(DioException e) {
+    temErro.value = true;
+    final statusCode = e.response?.statusCode ?? 500;
+    erroStatusCode.value = statusCode;
+
+    if (statusCode == 422) {
+      final data = e.response?.data as Map<String, dynamic>?;
+      erroTitulo.value = data?['titulo'] ?? 'Serviço não disponível';
+      erroDescricao.value = data?['descricao'] ?? 'Procure o SAC';
+    } else {
+      erroTitulo.value = 'Erro ao carregar';
+      erroDescricao.value = 'Ocorreu um erro no servidor. Tente novamente.';
+    }
+  }
+}
+```
+
+### 2️⃣ Page (Widget com RefreshIndicator)
+
+Estrutura padrão com 4 estados:
+```dart
+class MeuPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final controller = Get.put(MeuController());
+    final colorScheme = Theme.of(context).colorScheme;
+
+    return Scaffold(
+      appBar: AppBar(title: const Text('Título')),
+      body: Obx(() {
+        // Estado 1: Loading inicial
+        if (controller.isLoading.value && controller.dados.isEmpty) {
+          return Center(child: CircularProgressIndicator());
+        }
+
+        // Estado 2: Erro
+        if (controller.temErro.value) {
+          final is422 = controller.erroStatusCode.value == 422;
+          final iconData = is422 ? Icons.warning_outlined : Icons.error_outline;
+          final iconColor = is422 ? Colors.amber : colorScheme.error;
+
+          return RefreshIndicator(
+            onRefresh: () => controller.carregarDados(),
+            child: ListView(
+              children: [
+                SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.6,
+                  child: Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(32),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(iconData, size: 80, color: iconColor),
+                          const SizedBox(height: 24),
+                          Text(
+                            controller.erroTitulo.value,
+                            textAlign: TextAlign.center,
+                            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          if (controller.erroDescricao.value.isNotEmpty) ...[
+                            const SizedBox(height: 12),
+                            Text(
+                              controller.erroDescricao.value,
+                              textAlign: TextAlign.center,
+                              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                color: colorScheme.onSurface.withValues(alpha: 0.7),
+                              ),
+                            ),
+                          ],
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          );
+        }
+
+        // Estado 3: Vazio
+        if (controller.dados.isEmpty) {
+          return RefreshIndicator(
+            onRefresh: () => controller.carregarDados(),
+            child: ListView(
+              children: [
+                SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.6,
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.inbox_outlined, size: 80, color: colorScheme.outlineVariant),
+                        const SizedBox(height: 16),
+                        Text('Nenhum item',
+                          style: Theme.of(context).textTheme.headlineSmall,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          );
+        }
+
+        // Estado 4: Sucesso
+        return RefreshIndicator(
+          onRefresh: () => controller.carregarDados(),
+          child: ListView.builder(
+            itemCount: controller.dados.length,
+            itemBuilder: (context, index) {
+              final item = controller.dados[index];
+              return _buildCard(context, item);
+            },
+          ),
+        );
+      }),
+    );
+  }
+
+  Widget _buildCard(BuildContext context, MeuModel item) {
+    // Implemente o card aqui
+  }
+}
+```
+
+### 3️⃣ BFF Service Interface & Implementação
+
+**IBffService:**
+```dart
+abstract class IBffService {
+  Future<dynamic> getMeusDados();
+}
+```
+
+**HttpBffService:**
+```dart
+@override
+Future<dynamic> getMeusDados() async {
+  try {
+    final response = await _dio.get('/bank123/pf/meus-dados/v1/lista');
+    return response.data;
+  } catch (e) {
+    rethrow;
+  }
+}
+```
+
+**MockBffService:**
+```dart
+@override
+Future<dynamic> getMeusDados() async {
+  await Future.delayed(const Duration(milliseconds: 600));
+  return {
+    "dados": [
+      {"id": "1", "titulo": "Item 1"},
+      {"id": "2", "titulo": "Item 2"},
+    ]
+  };
+}
+```
+
+### 4️⃣ Mockoon Endpoints
+
+Para cada tela, adicione 3 respostas no mesmo endpoint:
+
+**GET /bank123/pf/meus-dados/v1/lista**
+- ✅ **200**: sucesso com dados
+- ⚠️ **422**: serviço não disponível (título + descricao customizável)
+- ❌ **500**: erro genérico do servidor
+
+**Exemplo 422:**
+```json
+{
+  "titulo": "Serviço indisponível",
+  "descricao": "Procure o atendimento para reativar"
+}
+```
+
+### Checklist ao Criar Nova Tela com Dados Remotos
+
+- [ ] Controller com `isLoading`, `temErro`, `erroTitulo`, `erroDescricao`, `erroStatusCode`
+- [ ] Método `carregarDados()` trata `DioException` via `_tratarErro()`
+- [ ] Page com `RefreshIndicator` em todos os 4 estados
+- [ ] Erro 422: ícone ⚠️ amarelo
+- [ ] Erro 500: ícone ❌ vermelho
+- [ ] BFF Service: interface → implementação real + mock
+- [ ] Mockoon: 3 respostas (200, 422, 500)

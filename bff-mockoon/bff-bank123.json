@@ -678,6 +678,186 @@
       "type": "http",
       "streamingMode": null,
       "streamingInterval": 0
+    },
+    {
+      "uuid": "880e8400-e29b-41d4-a716-446655440017",
+      "documentation": "GET /seguro-home/v1/seguro-home — Retorna cards de seguros para carrossel",
+      "method": "get",
+      "endpoint": "/bank123/pf/seguro-home/v1/seguro-home",
+      "responses": [
+        {
+          "uuid": "880e8400-e29b-41d4-a716-446655440018",
+          "body": "{\n  \"cards\": [\n    {\n      \"id\": \"1\",\n      \"titulo\": \"Seguro de Vida\",\n      \"descricao\": \"Proteja sua família\",\n      \"icone\": \"heart\",\n      \"link\":\"https://thecoxinha.com.br\"\n    },\n    {\n      \"id\": \"2\",\n      \"titulo\": \"Seguro Residencial\",\n      \"descricao\": \"Proteja seu imóvel\",\n      \"icone\": \"home\",\n      \"link\":\"https://fabao.eng.br\"\n    },\n    {\n      \"id\": \"3\",\n      \"titulo\": \"Seguro Automóvel\",\n      \"descricao\": \"Proteja seu veículo\",\n      \"icone\": \"directions_car\",\n      \"link\":\"https://slackwarecps.github.io\"\n    },\n    {\n      \"id\": \"4\",\n      \"titulo\": \"Seguro Viagem\",\n      \"descricao\": \"Viaje com segurança\",\n      \"icone\": \"flight\",\n      \"link\":\"https://github.com/slackwarecps\"\n    },\n    {\n      \"id\": \"5\",\n      \"titulo\": \"Seguro Saúde\",\n      \"descricao\": \"Cuide da sua saúde\",\n      \"icone\": \"medical_services\",\n      \"link\":\"https://casalcash.fabao.eng.br\"\n    }\n  ]\n}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "Sucesso",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "default": true,
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "responseMode": null,
+      "type": "http",
+      "streamingMode": null,
+      "streamingInterval": 0
+    },
+    {
+      "uuid": "990e8400-e29b-41d4-a716-446655440019",
+      "documentation": "GET /pf/notificacoes/v1/lista — Retorna lista de notificações do usuário",
+      "method": "get",
+      "endpoint": "/bank123/pf/notificacoes/v1/lista",
+      "responses": [
+        {
+          "uuid": "990e8400-e29b-41d4-a716-446655440020",
+          "body": "{\n  \"notificacoes\": [\n    {\n      \"id\": \"1\",\n      \"titulo\": \"Transferência realizada\",\n      \"mensagem\": \"Você transferiu R$ 150,00 para João Silva\",\n      \"data\": \"2026-07-31T15:30:00.000Z\",\n      \"lida\": false,\n      \"icone\": \"transfer\"\n    },\n    {\n      \"id\": \"2\",\n      \"titulo\": \"Pagamento processado\",\n      \"mensagem\": \"Seu pagamento foi processado com sucesso\",\n      \"data\": \"2026-07-31T14:30:00.000Z\",\n      \"lida\": false,\n      \"icone\": \"payment\"\n    },\n    {\n      \"id\": \"3\",\n      \"titulo\": \"Segurança da conta\",\n      \"mensagem\": \"Novo login detectado em São Paulo\",\n      \"data\": \"2026-07-31T13:30:00.000Z\",\n      \"lida\": true,\n      \"icone\": \"security\"\n    },\n    {\n      \"id\": \"4\",\n      \"titulo\": \"Atualização de seguro\",\n      \"mensagem\": \"Seu seguro foi atualizado com sucesso\",\n      \"data\": \"2026-07-30T12:00:00.000Z\",\n      \"lida\": true,\n      \"icone\": \"info\"\n    }\n  ]\n}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "Sucesso",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "default": true,
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "cb6128d6-8b9a-4955-bbdb-ae94d33791c5",
+          "body": "{\n  \"erro\": \"servidor offline\"\n}",
+          "latency": 0,
+          "statusCode": 500,
+          "label": "erro",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "default": false,
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "d238aab8-7358-46f8-b517-2bde1bdcc9b8",
+          "body": "{\n\"titulo\":\"Problema de Notificacao\",\n\"code\":422,\n\"descricao\":\"Erro de Regra de negocio\"\n}",
+          "latency": 0,
+          "statusCode": 422,
+          "label": "Erro de negocio",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "default": false,
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "responseMode": null,
+      "type": "http",
+      "streamingMode": null,
+      "streamingInterval": 0
+    },
+    {
+      "uuid": "aa0e8400-e29b-41d4-a716-446655440021",
+      "documentation": "lista — Retorna lista simples de notificações",
+      "method": "get",
+      "endpoint": "/bank123/pf/notificacoes/v1/notificacoes",
+      "responses": [
+        {
+          "uuid": "aa0e8400-e29b-41d4-a716-446655440022",
+          "body": "[\n  {\n    \"id\": \"1\",\n    \"notificacao\": \"Você transferiu R$ 150,00 para João Silva em 31/07 às 15:30\"\n  },\n  {\n    \"id\": \"2\",\n    \"notificacao\": \"Seu pagamento foi processado com sucesso em 31/07 às 14:30\"\n  },\n  {\n    \"id\": \"3\",\n    \"notificacao\": \"Novo login detectado em São Paulo em 31/07 às 13:30\"\n  },\n  {\n    \"id\": \"4\",\n    \"notificacao\": \"Seu seguro foi atualizado com sucesso em 30/07 às 12:00\"\n  },\n  {\n    \"id\": \"5\",\n    \"notificacao\": \"Limite de crédito aumentado para R$ 5.000,00 em 29/07\"\n  }\n]",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "Sucesso",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "default": true,
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "e000034e-e113-4a30-866f-b4ff698aef57",
+          "body": "{\n  Erro no Servidor\n}",
+          "latency": 0,
+          "statusCode": 500,
+          "label": "Erro nas notificacoes",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "default": false,
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "responseMode": null,
+      "type": "http",
+      "streamingMode": null,
+      "streamingInterval": 0
     }
   ],
   "rootChildren": [
@@ -720,6 +900,14 @@
     {
       "type": "folder",
       "uuid": "bb5c6a87-dc43-4f14-b88d-529c6a005de4"
+    },
+    {
+      "type": "folder",
+      "uuid": "8f5365a7-5bea-4362-a92f-cefc7395baf3"
+    },
+    {
+      "type": "folder",
+      "uuid": "2bae9a61-424f-4765-993b-99175d5872f0"
     }
   ],
   "proxyMode": false,
@@ -767,6 +955,30 @@
         {
           "type": "route",
           "uuid": "770e8400-e29b-41d4-a716-446655440013"
+        }
+      ]
+    },
+    {
+      "uuid": "8f5365a7-5bea-4362-a92f-cefc7395baf3",
+      "name": "Notificacoes",
+      "children": [
+        {
+          "type": "route",
+          "uuid": "aa0e8400-e29b-41d4-a716-446655440021"
+        },
+        {
+          "type": "route",
+          "uuid": "990e8400-e29b-41d4-a716-446655440019"
+        }
+      ]
+    },
+    {
+      "uuid": "2bae9a61-424f-4765-993b-99175d5872f0",
+      "name": "Seguros",
+      "children": [
+        {
+          "type": "route",
+          "uuid": "880e8400-e29b-41d4-a716-446655440017"
         }
       ]
     }

@@ -183,4 +183,145 @@ class MockBffService implements IBffService {
       }
     ];
   }
+
+  @override
+  Future<dynamic> getSeguroHome() async {
+    await Future.delayed(const Duration(milliseconds: 800));
+    return {
+      "cards": [
+        {
+          "id": "1",
+          "titulo": "Seguro de Vida",
+          "descricao": "Proteja sua família",
+          "icone": "heart",
+          "link": "https://thecoxinha.com.br"
+        },
+        {
+          "id": "2",
+          "titulo": "Seguro Residencial",
+          "descricao": "Proteja seu imóvel",
+          "icone": "home",
+          "link": "https://thecoxinha.com.br"
+        },
+        {
+          "id": "3",
+          "titulo": "Seguro Automóvel",
+          "descricao": "Proteja seu veículo",
+          "icone": "directions_car",
+          "link": "https://thecoxinha.com.br"
+        },
+        {
+          "id": "4",
+          "titulo": "Seguro Viagem",
+          "descricao": "Viaje com segurança",
+          "icone": "flight",
+          "link": "https://thecoxinha.com.br"
+        },
+        {
+          "id": "5",
+          "titulo": "Seguro Saúde",
+          "descricao": "Cuide da sua saúde",
+          "icone": "medical_services",
+          "link": "https://thecoxinha.com.br"
+        }
+      ]
+    };
+  }
+
+  @override
+  Future<dynamic> getNotificacoes() async {
+    await Future.delayed(const Duration(milliseconds: 600));
+    return {
+      "notificacoes": [
+        {
+          "id": "1",
+          "titulo": "Transferência realizada",
+          "mensagem": "Você transferiu R\$ 150,00 para João Silva",
+          "data": DateTime.now().toIso8601String(),
+          "lida": false,
+          "icone": "transfer"
+        },
+        {
+          "id": "2",
+          "titulo": "Pagamento processado",
+          "mensagem": "Seu pagamento foi processado com sucesso",
+          "data": DateTime.now().subtract(const Duration(hours: 1)).toIso8601String(),
+          "lida": false,
+          "icone": "payment"
+        },
+        {
+          "id": "3",
+          "titulo": "Segurança da conta",
+          "mensagem": "Novo login detectado em São Paulo",
+          "data": DateTime.now().subtract(const Duration(hours: 2)).toIso8601String(),
+          "lida": true,
+          "icone": "security"
+        },
+        {
+          "id": "4",
+          "titulo": "Atualização de seguro",
+          "mensagem": "Seu seguro foi atualizado com sucesso",
+          "data": DateTime.now().subtract(const Duration(days: 1)).toIso8601String(),
+          "lida": true,
+          "icone": "info"
+        },
+      ]
+    };
+  }
+
+  @override
+  Future<List<dynamic>> getNotificacoesSimples() async {
+    await Future.delayed(const Duration(milliseconds: 400));
+    return [
+      {
+        "id": "1",
+        "notificacao": "Você transferiu R\$ 150,00 para João Silva em 31/07 às 15:30"
+      },
+      {
+        "id": "2",
+        "notificacao": "Seu pagamento foi processado com sucesso em 31/07 às 14:30"
+      },
+      {
+        "id": "3",
+        "notificacao": "Novo login detectado em São Paulo em 31/07 às 13:30"
+      },
+      {
+        "id": "4",
+        "notificacao": "Seu seguro foi atualizado com sucesso em 30/07 às 12:00"
+      },
+      {
+        "id": "5",
+        "notificacao": "Limite de crédito aumentado para R\$ 5.000,00 em 29/07"
+      },
+    ];
+  }
+
+  @override
+  Future<Response> marcarNotificacaoComoLida(String notificacaoId) async {
+    await Future.delayed(const Duration(milliseconds: 300));
+    return Response(
+      requestOptions: RequestOptions(path: '/notificacoes/$notificacaoId/lida'),
+      data: {
+        "status": "success",
+        "mensagem": "Notificação marcada como lida",
+        "notificacaoId": notificacaoId
+      },
+      statusCode: 200,
+    );
+  }
+
+  @override
+  Future<Response> marcarMultiplasNotificacoesComoLidas(List<String> ids) async {
+    await Future.delayed(const Duration(milliseconds: 400));
+    return Response(
+      requestOptions: RequestOptions(path: '/notificacoes/marcar-lidas'),
+      data: {
+        "status": "success",
+        "mensagem": "Notificações marcadas como lidas",
+        "quantidade": ids.length,
+        "ids": ids
+      },
+      statusCode: 200,
+    );
+  }
 }

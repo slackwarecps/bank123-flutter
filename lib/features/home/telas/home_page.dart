@@ -3,6 +3,7 @@ import 'package:bank123/features/home/telas/home_bank.dart';
 import 'package:bank123/features/home/telas/tab_principal.dart';
 import 'package:bank123/features/home/telas/tab_seguro.dart';
 import 'package:bank123/features/home/telas/tab_servico.dart';
+import 'package:bank123/features/notificacoes/notificacoes_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -95,7 +96,7 @@ class HomePage extends StatelessWidget {
                       Icons.notifications_outlined,
                       color: colorScheme.onPrimary,
                     ),
-                    onPressed: () => _showEmDesenvolvimento(context, 'Notificações'),
+                    onPressed: () => _abrirNotificacoes(),
                   ),
                 ],
               ),
@@ -149,18 +150,21 @@ class HomePage extends StatelessWidget {
             ),
             // Conteúdo das abas
             Expanded(
-              child: Obx(
-                () {
-                  if (controller.abaAtiva.value == 'Meu Bank123') {
-                    return const TabPrincipal();
-                  } else if (controller.abaAtiva.value == 'Seguro') {
-                    return const TabSeguro();
-                  } else if (controller.abaAtiva.value == 'Serviço') {
-                    return const TabServico();
-                  } else {
-                    return const HomeBank();
-                  }
-                },
+              child: RefreshIndicator(
+                onRefresh: () => controller.recarregarAbaAtiva(),
+                child: Obx(
+                  () {
+                    if (controller.abaAtiva.value == 'Meu Bank123') {
+                      return const TabPrincipal();
+                    } else if (controller.abaAtiva.value == 'Seguro') {
+                      return const TabSeguro();
+                    } else if (controller.abaAtiva.value == 'Serviço') {
+                      return const TabServico();
+                    } else {
+                      return const HomeBank();
+                    }
+                  },
+                ),
               ),
             ),
           ],
@@ -198,11 +202,11 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  void _showEmDesenvolvimento(BuildContext context, String feature) {
-    Get.snackbar(
-      'Em desenvolvimento',
-      '$feature estará disponível em breve.',
-      snackPosition: SnackPosition.BOTTOM,
+  void _abrirNotificacoes() {
+    Get.to(
+      () => const NotificacoesPage(),
+      transition: Transition.rightToLeft,
+      duration: const Duration(milliseconds: 400),
     );
   }
 }

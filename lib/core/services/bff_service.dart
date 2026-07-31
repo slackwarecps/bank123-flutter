@@ -224,6 +224,66 @@ class HttpBffService implements IBffService {
     }
   }
 
+  // 8. Seguro Home
+  @override
+  Future<dynamic> getSeguroHome() async {
+    try {
+      final response = await _dio.get('/bank123/pf/seguro-home/v1/seguro-home');
+      return response.data;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  // 9. Notificações
+  @override
+  Future<dynamic> getNotificacoes() async {
+    try {
+      final response = await _dio.get('/bank123/pf/notificacoes/v1/lista');
+      return response.data;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  // 10. Notificações Simples
+  @override
+  Future<List<dynamic>> getNotificacoesSimples() async {
+    try {
+      final response = await _dio.get('/bank123/pf/notificacoes/v1/notificacoes');
+      return List<dynamic>.from(response.data);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  // 11. Marcar Notificação como Lida
+  @override
+  Future<Response> marcarNotificacaoComoLida(String notificacaoId) async {
+    try {
+      final response = await _dio.post(
+        '/bank123/pf/notificacoes/v1/$notificacaoId/lida',
+      );
+      return response;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  // 12. Marcar Múltiplas Notificações como Lidas
+  @override
+  Future<Response> marcarMultiplasNotificacoesComoLidas(List<String> ids) async {
+    try {
+      final response = await _dio.post(
+        '/bank123/pf/notificacoes/v1/marcar-lidas',
+        data: {'ids': ids},
+      );
+      return response;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   // Helper para formatar o fingerprint
   String _bytesToHex(List<int> bytes) {
     return bytes.map((byte) => byte.toRadixString(16).padLeft(2, '0').toUpperCase()).join(':');

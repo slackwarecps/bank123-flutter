@@ -245,4 +245,23 @@ class HomeController extends GetxController {
       carregandoServico.value = false;
     }
   }
+
+  Future<void> recarregarAbaAtiva() async {
+    try {
+      if (abaAtiva.value == 'Bank') {
+        await _carregarDadosHome();
+      } else if (abaAtiva.value == 'Serviço') {
+        await carregarComponentesServico();
+      } else if (abaAtiva.value == 'Seguro') {
+        try {
+          final seguroController = Get.find(tag: 'tabSeguro');
+          await seguroController.carregarSeguros();
+        } catch (e) {
+          developer.log('Controller de Seguro não encontrado: $e', name: 'HomeController');
+        }
+      }
+    } catch (e) {
+      developer.log('Erro ao recarregar aba: $e', name: 'HomeController');
+    }
+  }
 }
