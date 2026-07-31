@@ -5,6 +5,6 @@ class LoginBinding extends Bindings {
   @override
   void dependencies() {
     print('[LoginBinding] Creating LoginController immediately with Get.put()');
-    Get.put<LoginController>(LoginController());
+    Get.put<LoginController>(LoginController(), force: true);
   }
 }
