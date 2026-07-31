@@ -1,5 +1,6 @@
 import 'package:bank123/bindings/initial_binding.dart';
 import 'package:bank123/bindings/login_binding.dart';
+import 'package:bank123/bindings/home_binding.dart';
 
 import 'package:bank123/telas/cadastro_page.dart';
 import 'package:bank123/telas/configuracao_page.dart';
@@ -144,7 +145,7 @@ class MainApp extends StatelessWidget {
       getPages: [
         GetPage(name: '/jailbreak', page: () => const JailbreakPage()),
         GetPage(name: '/', page: () => LoginScreen(), binding: LoginBinding()),
-        GetPage(name: '/home-page', page: () => const HomePage()),
+        GetPage(name: '/home-page', page: () => const HomePage(), binding: HomeBinding()),
         GetPage(
           name: '/login',
           page: () => LoginScreen(),

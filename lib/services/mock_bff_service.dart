@@ -69,7 +69,7 @@ class MockBffService implements IBffService {
   @override
   Future<Response> postTransferencia(Map<String, dynamic> payload) async {
     await Future.delayed(const Duration(seconds: 2));
-    
+
     // Simula uma resposta de sucesso do Dio
     return Response(
       requestOptions: RequestOptions(path: '/transferencia'),
@@ -81,5 +81,16 @@ class MockBffService implements IBffService {
       },
       statusCode: 201,
     );
+  }
+
+  @override
+  Future<dynamic> getCartaoCredito() async {
+    await Future.delayed(const Duration(milliseconds: 700));
+    return {
+      "bandeira": "Platinum",
+      "final": "0000",
+      "faturaAtual": 1287.45,
+      "limiteDisponivel": 4200.00,
+    };
   }
 }

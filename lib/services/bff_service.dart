@@ -189,6 +189,19 @@ class HttpBffService implements IBffService {
     }
   }
 
+  // 5. Cartão de Crédito
+  // TODO(BACKEND): endpoint ainda não confirmado — placeholder seguindo o namespace
+  // dos demais (/bff-bank123/{dominio}/v1/{recurso}). Ajustar quando o backend expuser o real.
+  @override
+  Future<dynamic> getCartaoCredito() async {
+    try {
+      final response = await _dio.get('/bff-bank123/cartao/v1/resumo');
+      return response.data;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   // Helper para formatar o fingerprint
   String _bytesToHex(List<int> bytes) {
     return bytes.map((byte) => byte.toRadixString(16).padLeft(2, '0').toUpperCase()).join(':');

@@ -1,9 +1,9 @@
+import 'package:bank123/models/cartao_credito_model.dart';
 import 'package:bank123/services/ibff_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'dart:developer' as developer;
 
@@ -11,14 +11,21 @@ class HomeController extends GetxController {
   final IBffService _bffService = Get.find<IBffService>();
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final _storage = const FlutterSecureStorage();
+
   var isLoading = false.obs;
+  var nome = ''.obs;
+  var saldo = 0.0.obs;
+  var numeroConta = ''.obs;
+  var saldoVisivel = true.obs;
+  var faturaVisivel = true.obs;
+  Rxn<CartaoCreditoModel> cartao = Rxn<CartaoCreditoModel>();
 
   @override
   void onInit() {
     super.onInit();
-    // Verifica o token assim que a Home é inicializada
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _validarTokenInicial();
+      _carregarDadosHome();
     });
   }
 
@@ -112,35 +119,47 @@ class HomeController extends GetxController {
     );
   }
 
-  Future<void> consultarSaldo() async {
-    if (!await _sessaoValida()) return;
-
+  Future<void> _carregarDadosHome() async {
     try {
       isLoading.value = true;
-      final dados = await _bffService.getSaldo();
-      
-      // Formatar valor para BRL
-      final saldo = dados['saldo'];
-      final saldoFormatado = NumberFormat.currency(locale: 'pt_BR', symbol: 'R\$').format(saldo);
-      final conta = dados['numeroConta'];
 
-      Get.defaultDialog(
-        title: "Saldo Atual",
-        middleText: "Conta: $conta\n\n$saldoFormatado",
-        textConfirm: "OK",
-        confirmTextColor: Colors.white,
-        onConfirm: () => Get.back(),
-      );
+      final perfilFuture = _bffService.getPerfil();
+      final saldoFuture = _bffService.getSaldo();
+      final cartaoFuture = _bffService.getCartaoCredito();
+
+      final results = await Future.wait([
+        perfilFuture,
+        saldoFuture,
+        cartaoFuture,
+      ]);
+
+      final perfilData = results[0] as Map<String, dynamic>;
+      final saldoData = results[1] as Map<String, dynamic>;
+      final cartaoData = results[2] as Map<String, dynamic>;
+
+      nome.value = perfilData['nome'] ?? '';
+      saldo.value = (saldoData['saldo'] as num?)?.toDouble() ?? 0.0;
+      numeroConta.value = saldoData['numeroConta'] ?? '';
+      cartao.value = CartaoCreditoModel.fromJson(cartaoData);
     } catch (e) {
+      developer.log('Erro ao carregar dados da Home: $e', name: 'HomeController');
       Get.snackbar(
-        "Erro", 
-        "Não foi possível consultar o saldo: $e",
+        'Erro',
+        'Não foi possível carregar os dados da Home',
         backgroundColor: Colors.red,
-        colorText: Colors.white
+        colorText: Colors.white,
       );
     } finally {
       isLoading.value = false;
     }
+  }
+
+  void toggleSaldoVisivel() {
+    saldoVisivel.value = !saldoVisivel.value;
+  }
+
+  void toggleFaturaVisivel() {
+    faturaVisivel.value = !faturaVisivel.value;
   }
 
   void consultarExtrato() async {
