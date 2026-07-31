@@ -7,8 +7,11 @@ class ConfiguracaoPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Injeta o controller
-    final ConfiguracaoController controller = Get.put(ConfiguracaoController());
+    // Injeta o controller (lazy para não duplicar em múltiplas visitas)
+    if (!Get.isRegistered<ConfiguracaoController>()) {
+      Get.lazyPut<ConfiguracaoController>(() => ConfiguracaoController());
+    }
+    final ConfiguracaoController controller = Get.find<ConfiguracaoController>();
     final colorScheme = Theme.of(context).colorScheme;
 
     return Scaffold(
