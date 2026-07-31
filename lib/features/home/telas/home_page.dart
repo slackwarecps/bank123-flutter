@@ -1,9 +1,11 @@
 import 'package:bank123/features/home/home_controller.dart';
 import 'package:bank123/features/home/telas/home_bank.dart';
-import 'package:bank123/features/home/telas/tab_principal.dart';
+import 'package:bank123/features/home/telas/home_pix.dart';
+import 'package:bank123/features/home/telas/tab_meu_bank123.dart';
 import 'package:bank123/features/home/telas/tab_seguro.dart';
 import 'package:bank123/features/home/telas/tab_servico.dart';
 import 'package:bank123/features/notificacoes/notificacoes_page.dart';
+import 'package:bank123/features/transferencia/chaves_pix/chaves_pix_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -17,6 +19,7 @@ class HomePage extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: colorScheme.surface,
+      drawer: _buildMenu(context, controller),
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -73,22 +76,27 @@ class HomePage extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Obx(
-                    () => Row(
-                      children: [
-                        Text(
-                          'Olá, ${controller.nome.value}',
-                          style: TextStyle(
-                            color: colorScheme.onPrimary,
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
+                  Builder(
+                    builder: (context) => GestureDetector(
+                      onTap: () => Scaffold.of(context).openDrawer(),
+                      child: Obx(
+                        () => Row(
+                          children: [
+                            Text(
+                              'Olá, ${controller.nome.value}',
+                              style: TextStyle(
+                                color: colorScheme.onPrimary,
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Icon(
+                              Icons.keyboard_arrow_down,
+                              color: colorScheme.onPrimary,
+                            ),
+                          ],
                         ),
-                        Icon(
-                          Icons.keyboard_arrow_down,
-                          color: colorScheme.onPrimary,
-                        ),
-                      ],
+                      ),
                     ),
                   ),
                   IconButton(
@@ -155,7 +163,7 @@ class HomePage extends StatelessWidget {
                 child: Obx(
                   () {
                     if (controller.abaAtiva.value == 'Meu Bank123') {
-                      return const TabPrincipal();
+                      return const TabMeuBank123();
                     } else if (controller.abaAtiva.value == 'Seguro') {
                       return const TabSeguro();
                     } else if (controller.abaAtiva.value == 'Serviço') {
@@ -207,6 +215,118 @@ class HomePage extends StatelessWidget {
       () => const NotificacoesPage(),
       transition: Transition.rightToLeft,
       duration: const Duration(milliseconds: 400),
+    );
+  }
+
+  Widget _buildMenu(BuildContext context, HomeController controller) {
+    final colorScheme = Theme.of(context).colorScheme;
+
+    return Drawer(
+      child: SafeArea(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              width: double.infinity,
+              color: colorScheme.primary,
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  CircleAvatar(
+                    radius: 28,
+                    backgroundColor: colorScheme.onPrimary,
+                    child: Icon(Icons.person, color: colorScheme.primary, size: 32),
+                  ),
+                  const SizedBox(height: 12),
+                  Obx(
+                    () => Text(
+                      controller.nome.value,
+                      style: TextStyle(
+                        color: colorScheme.onPrimary,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Expanded(
+              child: ListView(
+                padding: EdgeInsets.zero,
+                children: [
+                  ListTile(
+                    leading: const Icon(Icons.receipt_long_outlined),
+                    title: const Text('Extrato'),
+                    onTap: () {
+                      Get.back();
+                      Get.toNamed('/extrato');
+                    },
+                  ),
+                  ListTile(
+                    leading: const Icon(Icons.swap_horiz),
+                    title: const Text('Transferência'),
+                    onTap: () {
+                      Get.back();
+                      Get.toNamed('/transferencia');
+                    },
+                  ),
+                  ListTile(
+                    leading: const Icon(Icons.pix),
+                    title: const Text('Chaves Pix'),
+                    onTap: () {
+                      Get.back();
+                      Get.to(() => const ChavesPixPage());
+                    },
+                  ),
+                  ListTile(
+                    leading: const Icon(Icons.credit_card),
+                    title: const Text('Cartão virtual'),
+                    onTap: () {
+                      Get.back();
+                      Get.to(() => const HomePix());
+                    },
+                  ),
+                  ListTile(
+                    leading: const Icon(Icons.notifications_outlined),
+                    title: const Text('Notificações'),
+                    onTap: () {
+                      Get.back();
+                      _abrirNotificacoes();
+                    },
+                  ),
+                  const Divider(),
+                  ListTile(
+                    leading: const Icon(Icons.person_outline),
+                    title: const Text('Perfil'),
+                    onTap: () {
+                      Get.back();
+                      Get.toNamed('/perfil');
+                    },
+                  ),
+                  ListTile(
+                    leading: const Icon(Icons.settings_outlined),
+                    title: const Text('Configurações'),
+                    onTap: () {
+                      Get.back();
+                      Get.toNamed('/configuracoes');
+                    },
+                  ),
+                  ListTile(
+                    leading: Icon(Icons.logout, color: colorScheme.error),
+                    title: Text('Sair', style: TextStyle(color: colorScheme.error)),
+                    onTap: () {
+                      Get.back();
+                      controller.confirmarLogout();
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

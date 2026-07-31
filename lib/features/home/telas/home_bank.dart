@@ -1,4 +1,5 @@
 import 'package:bank123/features/home/home_controller.dart';
+import 'package:bank123/features/home/telas/home_pix.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -40,7 +41,7 @@ class HomeBank extends StatelessWidget {
                       context,
                       Icons.credit_card,
                       'Cartão virtual',
-                      () => _showEmDesenvolvimento(context, 'Cartão virtual'),
+                      () => Get.to(() => const HomePix()),
                     ),
                   ),
                 ),

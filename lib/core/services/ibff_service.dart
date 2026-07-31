@@ -13,4 +13,5 @@ abstract class IBffService {
   Future<List<dynamic>> getNotificacoesSimples();
   Future<Response> marcarNotificacaoComoLida(String notificacaoId);
   Future<Response> marcarMultiplasNotificacoesComoLidas(List<String> ids);
+  Future<dynamic> getHomeApp();
 }

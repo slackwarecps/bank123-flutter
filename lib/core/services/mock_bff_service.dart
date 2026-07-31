@@ -324,4 +324,76 @@ class MockBffService implements IBffService {
       statusCode: 200,
     );
   }
+
+  @override
+  Future<dynamic> getHomeApp() async {
+    await Future.delayed(const Duration(milliseconds: 700));
+    return {
+      "componentes": [
+        {
+          "tipo": "acoes_rapidas",
+          "id": "acoes1",
+          "itens": [
+            {"id": "cartao_virtual", "label": "Cartão virtual", "icone": "credit_card", "action": "CARTAO_VIRTUAL"},
+            {"id": "pix", "label": "Pix", "icone": "pix", "action": "PIX"},
+            {"id": "credito", "label": "Crédito", "icone": "payments", "action": "CREDITO"},
+            {"id": "cartao", "label": "Cartão", "icone": "credit_card", "action": "CARTAO"},
+          ]
+        },
+        {
+          "tipo": "banner_destaque",
+          "id": "banner1",
+          "icone": "attach_money",
+          "titulo": "Conheça o Bank123 Invest!",
+          "descricao": "Invista com segurança e a solidez Bank123.",
+          "action": "INVEST"
+        },
+        {
+          "tipo": "conta_saldo",
+          "id": "conta1",
+          "titulo": "Minha Conta Bank123",
+          "label": "Saldo disponível",
+          "valor": 4582.37,
+          "acaoLabel": "Acessar",
+          "action": "EXTRATO"
+        },
+        {
+          "tipo": "cartao_credito",
+          "id": "cartao1",
+          "titulo": "Meus cartões",
+          "bandeira": "Visa",
+          "descricao": "Sem Anuidade final 1119",
+          "faturaLabel": "Sua fatura",
+          "fatura": 812.45,
+          "limiteLabel": "Limite disponível",
+          "limite": 3200.00,
+          "acaoFaturaLabel": "Ver fatura",
+          "acaoFaturaAction": "FATURA",
+          "acaoMaisLabel": "Ver mais",
+          "acaoMaisAction": "CARTAO_DETALHES"
+        },
+        {
+          "tipo": "carrossel_promocional",
+          "id": "carrossel1",
+          "titulo": "Mais Bank123 para você",
+          "itens": [
+            {
+              "id": "1",
+              "tag": "Bank123 Invest",
+              "titulo": "Conheça a nossa nova solução",
+              "cta": "Diversificar seu patrimônio ficou ainda mais fácil",
+              "action": "INVEST"
+            },
+            {
+              "id": "2",
+              "tag": "Bank123 Seguros",
+              "titulo": "Proteja o que importa",
+              "cta": "Garanta já a sua proteção",
+              "action": "SEGURO"
+            },
+          ]
+        },
+      ]
+    };
+  }
 }

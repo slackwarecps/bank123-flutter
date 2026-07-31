@@ -284,6 +284,17 @@ class HttpBffService implements IBffService {
     }
   }
 
+  // 13. Home App (SDU)
+  @override
+  Future<dynamic> getHomeApp() async {
+    try {
+      final response = await _dio.get('/bank123/pf/plataforma/v1/home-app');
+      return response.data;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   // Helper para formatar o fingerprint
   String _bytesToHex(List<int> bytes) {
     return bytes.map((byte) => byte.toRadixString(16).padLeft(2, '0').toUpperCase()).join(':');

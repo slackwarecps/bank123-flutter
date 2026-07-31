@@ -21,7 +21,7 @@ class HomeController extends GetxController {
   var saldoVisivel = true.obs;
   var faturaVisivel = true.obs;
   Rxn<CartaoCreditoModel> cartao = Rxn<CartaoCreditoModel>();
-  var abaAtiva = 'Bank'.obs;
+  var abaAtiva = 'Meu Bank123'.obs;
   var componentesServico = Rxn<Map<String, dynamic>>();
   var carregandoServico = false.obs;
   var erroServico = false.obs;
@@ -258,6 +258,13 @@ class HomeController extends GetxController {
           await seguroController.carregarSeguros();
         } catch (e) {
           developer.log('Controller de Seguro não encontrado: $e', name: 'HomeController');
+        }
+      } else if (abaAtiva.value == 'Meu Bank123') {
+        try {
+          final meuBank123Controller = Get.find(tag: 'tabMeuBank123');
+          await meuBank123Controller.carregarHomeApp();
+        } catch (e) {
+          developer.log('Controller de Meu Bank123 não encontrado: $e', name: 'HomeController');
         }
       }
     } catch (e) {

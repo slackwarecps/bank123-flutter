@@ -858,6 +858,90 @@
       "type": "http",
       "streamingMode": null,
       "streamingInterval": 0
+    },
+    {
+      "uuid": "f9943079-1dd8-48e7-bfc7-c1fbef595eeb",
+      "documentation": "GET /pf/plataforma/v1/home-app — Retorna SDU (componentes visuais) da Home 'Meu Bank123'",
+      "method": "get",
+      "endpoint": "/bank123/pf/plataforma/v1/home-app",
+      "responses": [
+        {
+          "uuid": "105ebbe4-0112-440d-b8e7-c396b8904abd",
+          "body": "{\n  \"componentes\": [\n    {\n      \"tipo\": \"acoes_rapidas\",\n      \"id\": \"acoes1\",\n      \"itens\": [\n        {\n          \"id\": \"cartao_virtual\",\n          \"label\": \"Cartão Gato\",\n          \"icone\": \"credit_card\",\n          \"action\": \"CARTAO_VIRTUAL\"\n        },\n        {\n          \"id\": \"pix\",\n          \"label\": \"Pix\",\n          \"icone\": \"pix\",\n          \"action\": \"PIX\"\n        },\n        {\n          \"id\": \"credito\",\n          \"label\": \"Crédito\",\n          \"icone\": \"payments\",\n          \"action\": \"CREDITO\"\n        },\n        {\n          \"id\": \"cartao\",\n          \"label\": \"Cartão\",\n          \"icone\": \"credit_card\",\n          \"action\": \"CARTAO\"\n        }\n      ]\n    },\n    {\n      \"tipo\": \"banner_destaque\",\n      \"id\": \"banner1\",\n      \"icone\": \"attach_money\",\n      \"titulo\": \"Conheça o Bank123 Invest!\",\n      \"descricao\": \"Invista com segurança e a solidez Bank123.\",\n      \"action\": \"INVEST\"\n    },\n    {\n      \"tipo\": \"conta_saldo\",\n      \"id\": \"conta1\",\n      \"titulo\": \"Minha Conta Bank123\",\n      \"label\": \"Saldo disponível\",\n      \"valor\": 4582.37,\n      \"acaoLabel\": \"Acessar\",\n      \"action\": \"EXTRATO\"\n    },\n    {\n      \"tipo\": \"cartao_credito\",\n      \"id\": \"cartao1\",\n      \"titulo\": \"Meus cartões\",\n      \"bandeira\": \"Visa\",\n      \"descricao\": \"Sem Anuidade final 1119\",\n      \"faturaLabel\": \"Sua fatura\",\n      \"fatura\": 812.45,\n      \"limiteLabel\": \"Limite disponível\",\n      \"limite\": 3200.0,\n      \"acaoFaturaLabel\": \"Ver fatura\",\n      \"acaoFaturaAction\": \"FATURA\",\n      \"acaoMaisLabel\": \"Ver mais\",\n      \"acaoMaisAction\": \"CARTAO_DETALHES\"\n    },\n    {\n      \"tipo\": \"carrossel_promocional\",\n      \"id\": \"carrossel1\",\n      \"titulo\": \"Mais Bank123 para você\",\n      \"itens\": [\n        {\n          \"id\": \"1\",\n          \"tag\": \"Bank123 Invest\",\n          \"titulo\": \"Conheça a nossa nova solução\",\n          \"cta\": \"Diversificar seu patrimônio ficou ainda mais fácil\",\n          \"action\": \"INVEST\"\n        },\n        {\n          \"id\": \"2\",\n          \"tag\": \"Bank123 Seguros\",\n          \"titulo\": \"Proteja o que importa\",\n          \"cta\": \"Garanta já a sua proteção\",\n          \"action\": \"SEGURO\"\n        }\n      ]\n    }\n  ]\n}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "Sucesso",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "default": true,
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "076b9751-f5e8-4aac-96b1-5505025a9bc4",
+          "body": "{\n  \"titulo\": \"Problema de Cadastro\",\n  \"code\": 422,\n  \"descricao\": \"Não foi possível carregar sua Home. Procure o Sac\"\n}",
+          "latency": 0,
+          "statusCode": 422,
+          "label": "Erro de negocio",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "default": false,
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "377aabec-3f9b-48c4-8db2-b89a95e2b7b7",
+          "body": "{\n  \"titulo\": \"Erro no Servidor\",\n  \"code\": 500,\n  \"descricao\": \"Tente novamente mais tarde\"\n}",
+          "latency": 0,
+          "statusCode": 500,
+          "label": "Erro do servidor",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "default": false,
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "responseMode": null,
+      "type": "http",
+      "streamingMode": null,
+      "streamingInterval": 0
     }
   ],
   "rootChildren": [
@@ -908,6 +992,10 @@
     {
       "type": "folder",
       "uuid": "2bae9a61-424f-4765-993b-99175d5872f0"
+    },
+    {
+      "type": "folder",
+      "uuid": "6c1c0a2a-9c9b-4f2e-8a3e-4f1e6c9a2b3d"
     }
   ],
   "proxyMode": false,
@@ -979,6 +1067,16 @@
         {
           "type": "route",
           "uuid": "880e8400-e29b-41d4-a716-446655440017"
+        }
+      ]
+    },
+    {
+      "uuid": "6c1c0a2a-9c9b-4f2e-8a3e-4f1e6c9a2b3d",
+      "name": "Plataforma",
+      "children": [
+        {
+          "type": "route",
+          "uuid": "f9943079-1dd8-48e7-bfc7-c1fbef595eeb"
         }
       ]
     }
