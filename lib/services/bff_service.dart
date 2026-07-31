@@ -202,6 +202,17 @@ class HttpBffService implements IBffService {
     }
   }
 
+  // 6. Componentes da aba Serviço
+  @override
+  Future<dynamic> getComponentesServico() async {
+    try {
+      final response = await _dio.get('/bank123/servicos/v1/home-servicos-sdu');
+      return response.data;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   // Helper para formatar o fingerprint
   String _bytesToHex(List<int> bytes) {
     return bytes.map((byte) => byte.toRadixString(16).padLeft(2, '0').toUpperCase()).join(':');

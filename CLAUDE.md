@@ -1,114 +1,81 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+Este arquivo fornece orientação ao Claude Code (claude.ai/code) ao trabalhar com código neste repositório.
 
-## Project context
+## Contexto do projeto
 
-Bank123 is a Flutter mobile frontend prototype built for a TCC (Brazilian capstone thesis) on mobile
-application security. It's a mock digital-bank app whose real purpose is to demonstrate secure coding
-practices (Firebase auth, secure storage, SSL pinning, anti-tampering) rather than real banking features.
+Bank123 é um protótipo de frontend mobile em Flutter construído para um TCC (Trabalho de Conclusão de Curso) sobre segurança em aplicações mobile. É um app de banco digital mock cujo propósito real é demonstrar práticas de codificação segura (autenticação Firebase, armazenamento seguro, SSL pinning, anti-tampering) em vez de funcionalidades reais de banco.
 
-Talk to the user in Portuguese and address them as "Fabão" (per `GEMINI.md`). They develop on a MacBook
-using an Android emulator (`Pixel_3a_API_33`).
+Comunique-se com o usuário em português e o chame de "Fabão" (conforme `GEMINI.md`). Ele desenvolve em um MacBook usando um emulador Android (`Pixel_3a_API_33`).
 
-The backend is a separate repo: `bff-bank123`, a Spring Boot service backed by PostgreSQL. It is not part
-of this repository.
+IMPORTANTE: Nunca commit no git sem ser expressamente orientado.
 
-## Commands
+O backend é um repositório separado: `bff-bank123`, um serviço Spring Boot apoiado por PostgreSQL. Não faz parte deste repositório.
+
+## Comandos
 
 ```bash
-# Install dependencies
+# Instalar dependências
 flutter pub get
 
-# Regenerate Firebase config (select project draft1-app-fabao)
+# Regenerar configuração do Firebase (selecione o projeto draft1-app-fabao)
 flutterfire configure
 
-# Static analysis (uses flutter_lints — run before committing)
+# Análise estática (usa flutter_lints — executar antes de fazer commit)
 flutter analyze
 
-# Run against the real BFF (API_BASE_URL is required on the CLI)
+# Executar contra o BFF real (API_BASE_URL é obrigatório na CLI)
 flutter run --dart-define=API_BASE_URL=https://bank123-main-297cd30.d2.zuplo.dev
 
-# Run fully offline against in-memory mock services (no backend/Firebase network calls needed)
+# Executar completamente offline contra serviços mock em memória (sem chamadas de backend/Firebase)
 flutter run --dart-define=USE_MOCK=true
 
-# Build APK
+# Compilar APK
 flutter build apk --dart-define=API_BASE_URL=https://bank123-main-297cd30.d2.zuplo.dev
 
-# Regenerate launcher icons after changing assets/icon/
+# Regenerar ícones de launcher após alterar assets/icon/
 flutter pub run flutter_launcher_icons
 ```
 
-There is no test suite in this repo (`flutter_test` is a dev dependency but no `test/` directory exists
-yet). VS Code has preconfigured launch targets in `.vscode/launch.json`: `bank123` (real backend),
-`bank123-local` (mock services), plus profile/release variants.
+Não há suite de testes neste repo (`flutter_test` é uma dependência dev, mas nenhum diretório `test/` existe ainda). VS Code tem alvos de launch pré-configurados em `.vscode/launch.json`: `bank123` (backend real), `bank123-local` (serviços mock), além de variantes de profile/release.
 
-Config is injected exclusively via `--dart-define` at build/run time (`API_BASE_URL`, `USE_MOCK`) —
-never via `.env`/`assets`, since Flutter assets ship as plaintext in the package. Don't reintroduce a
-`.env`-based config path.
+A configuração é injetada exclusivamente via `--dart-define` no tempo de build/run (`API_BASE_URL`, `USE_MOCK`) — nunca via `.env`/`assets`, pois assets do Flutter são enviados como texto claro no pacote. Não reintroduza um caminho de configuração baseado em `.env`.
 
-## Architecture
+## Arquitetura
 
-**State management:** GetX (`get` package) throughout — reactive `.obs` fields on `GetxController`
-subclasses, `Obx(() => ...)` in widgets, `Get.put()`/`Get.find()` for DI, `GetPage`/`GetMaterialApp` for
-routing (all routes declared in `lib/main.dart`).
+**Gerenciamento de estado:** GetX (pacote `get`) em toda parte — campos reativos `.obs` em subclasses `GetxController`, `Obx(() => ...)` em widgets, `Get.put()`/`Get.find()` para DI, `GetPage`/`GetMaterialApp` para roteamento (todas as rotas declaradas em `lib/main.dart`).
 
-**Directory layout** (`lib/`):
-- `bindings/` — GetX `Bindings` classes that wire up dependency injection per route/app-lifecycle stage.
-- `controllers/` — one `GetxController` per screen/flow, holds UI state and calls into `services/`.
-- `services/` — API/Firebase wrapper layer (see DI pattern below).
-- `telas/` — main screens (login, home, perfil, extrato, transferência, configuração, jailbreak/error
-  pages). `telas/diversos/` holds POC/scratch screens.
-- `pages/` — secondary screens (e.g. contatos). Note: there's a historical split between `telas/` and
-  `pages/` that was never fully reconciled — when adding new screens, follow whichever convention the
-  nearest similar screen already uses rather than inventing a third location.
-- `models/` — data models/DTOs.
-- `firebase_options.dart` — generated by `flutterfire configure`; don't hand-edit.
+**Layout de diretórios** (`lib/`):
+- `bindings/` — classes `Bindings` do GetX que conectam injeção de dependência por rota/estágio de ciclo de vida do app.
+- `controllers/` — um `GetxController` por tela/fluxo, mantém estado de UI e chama para `services/`.
+- `services/` — camada de wrapper de API/Firebase (veja padrão de DI abaixo).
+- `telas/` — telas principais (login, home, perfil, extrato, transferência, configuração, jailbreak/páginas de erro). `telas/diversos/` contém telas de POC/scratch.
+- `models/` — modelos de dados/DTOs.
+- `firebase_options.dart` — gerado por `flutterfire configure`; não edite manualmente.
 
-**Service layer / mock DI pattern:** Real vs. mock implementations are selected once at startup based on
-the `USE_MOCK` dart-define, in `lib/bindings/initial_binding.dart`:
-- `IAuthService` → `FirebaseAuthService` (real) or `MockAuthService` (mock)
-- `IBffService` → `HttpBffService` (real, in `bff_service.dart`) or `MockBffService` (mock)
+**Camada de serviço / padrão de DI mock:** Implementações reais vs. mock são selecionadas uma vez na inicialização com base no dart-define `USE_MOCK`, em `lib/bindings/initial_binding.dart`:
+- `IAuthService` → `FirebaseAuthService` (real) ou `MockAuthService` (mock)
+- `IBffService` → `HttpBffService` (real, em `bff_service.dart`) ou `MockBffService` (mock)
 
-Controllers depend on the interfaces (`IAuthService`, `IBffService`) via `Get.find()`, never on the
-concrete implementations directly — this is what makes `USE_MOCK=true` work. When adding a new backend
-call, add it to the interface first, then implement it in both the real and mock service.
+Controllers dependem das interfaces (`IAuthService`, `IBffService`) via `Get.find()`, nunca das implementações concretas diretamente — isso é o que faz `USE_MOCK=true` funcionar. Ao adicionar uma nova chamada de backend, adicione primeiro à interface, depois implemente em ambos os serviços real e mock.
 
-**BFF communication (`lib/services/bff_service.dart`):** Dio client with:
-- SSL pinning via `badCertificateCallback`, comparing the server cert's SHA-256 fingerprint against a
-  hardcoded expected value (intentionally hardcoded rather than config-driven — see the comment in that
-  file for the security rationale: `.env`/assets ship as plaintext, hardcoding forces binary patching).
-- A request interceptor that attaches `Authorization: Bearer <Firebase ID token>`, `x-account-id` (from
-  secure storage, key `NUMERO_CONTA`), and `x-correlation-id` (fresh UUID v4) to every call.
-- Endpoints are namespaced under `/bff-bank123/{usuario,extrato,movimentacoes}/v1/...`.
+**Comunicação com BFF (`lib/services/bff_service.dart`):** cliente Dio com:
+- SSL pinning via `badCertificateCallback`, comparando o fingerprint SHA-256 do certificado do servidor contra um valor esperado hardcoded (intencionalmente hardcoded ao invés de ser dirigido por configuração — veja o comentário nesse arquivo pela razão de segurança: `.env`/assets são enviados como texto claro, hardcoding força patching binário).
+- Um interceptor de requisição que anexa `Authorization: Bearer <Firebase ID token>`, `x-account-id` (do armazenamento seguro, chave `NUMERO_CONTA`), e `x-correlation-id` (UUID v4 fresco) para cada chamada.
+- Endpoints têm namespace sob `/bff-bank123/{usuario,extrato,movimentacoes}/v1/...`.
 
-**Runtime self-defense (`lib/main.dart`):** Before `runApp`, the app checks `SafeDevice.isJailBroken`
-(from the `safe_device` package) and scans for Frida (known binary paths, port 27042, and
-`/proc/self/maps` signatures like `frida-agent`/`gum-js-loop`). If either check trips, it routes straight
-to `JailbreakPage` instead of the normal app. If the initial check passes, a `Timer.periodic` re-scans for
-Frida every 5 seconds for the life of the app and calls `exit(0)` immediately if it appears mid-session.
-Treat this detection logic as security-sensitive — changes here affect the app's core threat model, not
-just a feature.
+**Autodefesa em tempo de execução (`lib/main.dart`):** Antes de `runApp`, o app verifica `SafeDevice.isJailBroken` (do pacote `safe_device`) e procura por Frida (caminhos binários conhecidos, porta 27042, e assinaturas em `/proc/self/maps` como `frida-agent`/`gum-js-loop`). Se qualquer verificação disparar, roteia direto para `JailbreakPage` ao invés do app normal. Se a verificação inicial passar, um `Timer.periodic` re-verifica Frida a cada 5 segundos pela vida do app e chama `exit(0)` imediatamente se aparecer mid-session. Trate essa lógica de detecção como sensível a segurança — mudanças aqui afetam o modelo de ameaça central do app, não apenas um recurso.
 
-**Secure storage:** `flutter_secure_storage` (Keychain/Keystore-backed) holds sensitive
-values/preferences — e.g. `biometric_enabled` (gates whether the biometric login button appears) and
-`NUMERO_CONTA` (account id sent as `x-account-id`). Don't use `shared_preferences` for anything
-security-sensitive; it's present in `pubspec.yaml` but should stay limited to non-sensitive UI state.
+**Armazenamento seguro:** `flutter_secure_storage` (com suporte de Keychain/Keystore) mantém valores/preferências sensíveis — ex: `biometric_enabled` (controla se o botão de login biométrico aparece) e `NUMERO_CONTA` (id da conta enviado como `x-account-id`). Não use `shared_preferences` para nada sensível a segurança; está presente em `pubspec.yaml` mas deve se limitar ao estado de UI não-sensível.
 
-**Biometric login:** `local_auth`. The biometric button on the login screen is conditional on the
-`biometric_enabled` flag in secure storage — it's opt-in, not shown by default.
+**Login biométrico:** `local_auth`. O botão biométrico na tela de login é condicional à flag `biometric_enabled` no armazenamento seguro — é opt-in, não mostrado por padrão.
 
-**JWT inspection:** The Perfil screen decodes the Firebase ID token (`jwt_decoder`) to show claims, scopes,
-and timestamps for auditing/debugging transparency, and offers a copy-to-clipboard action for the raw
-token.
+**Inspeção de JWT:** A tela de Perfil decodifica o token ID do Firebase (`jwt_decoder`) para mostrar claims, escopos, e timestamps para transparência de auditoria/debug, e oferece uma ação de copiar-para-clipboard para o token bruto.
 
-**Crash reporting:** `firebase_crashlytics` is wired up in `main.dart` to capture both fatal Flutter
-framework errors and uncaught async errors.
+**Relatório de crashes:** `firebase_crashlytics` está conectado em `main.dart` para capturar erros fatais de framework Flutter e erros assincronos não capturados.
 
-## Conventions
+## Convenções
 
-- Classes: `PascalCase`; files: `snake_case`; variables: `camelCase`.
-- Material 3 only — use `Theme.of(context).colorScheme` rather than hardcoded colors (app theme uses a
-  red/brown seed color).
-- Release builds should be built with `--obfuscate --split-debug-info` (per README) to strip debug
-  metadata as part of the anti-reverse-engineering posture — keep this in mind if touching build scripts/CI.
+- Classes: `PascalCase`; arquivos: `snake_case`; variáveis: `camelCase`.
+- Apenas Material 3 — use `Theme.of(context).colorScheme` ao invés de cores hardcoded (tema do app usa uma cor de seed vermelho/marrom).
+- Builds de release devem ser compilados com `--obfuscate --split-debug-info` (por README) para remover metadados de debug como parte da postura anti-reverse-engineering — mantenha isso em mente se mexer em scripts de build/CI.

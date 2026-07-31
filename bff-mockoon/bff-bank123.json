@@ -3,7 +3,7 @@
   "lastMigration": 33,
   "name": "Bank123 BFF Mock",
   "endpointPrefix": "",
-  "latency": 0,
+  "latency": 150,
   "port": 8089,
   "hostname": "0.0.0.0",
   "routes": [
@@ -450,6 +450,90 @@
       "responseMode": null,
       "streamingMode": null,
       "streamingInterval": 0
+    },
+    {
+      "uuid": "660e8400-e29b-41d4-a716-446655440008",
+      "documentation": "GET /servicos/v1/home-servicos-sdu — Retorna componentes visuais para aba Serviço",
+      "method": "get",
+      "endpoint": "/bank123/servicos/v1/home-servicos-sdu",
+      "responses": [
+        {
+          "uuid": "660e8400-e29b-41d4-a716-446655440009",
+          "body": "{\n  \"buttons\": [\n    {\n      \"id\": \"servico1\",\n      \"label\": \"Serviço 1\",\n      \"icon\": \"receipt_long\",\n      \"action\": \"SERVICO_1\"\n    },\n    {\n      \"id\": \"servico2\",\n      \"label\": \"Serviço 2\",\n      \"icon\": \"history\",\n      \"action\": \"SERVICO_2\"\n    },\n    {\n      \"id\": \"servico3\",\n      \"label\": \"Serviço 3\",\n      \"icon\": \"download\",\n      \"action\": \"SERVICO_3\"\n    },\n     {\n      \"id\": \"servico4\",\n      \"label\": \"Servico do Mockoon\",\n      \"icon\": \"download\",\n      \"action\": \"SERVICO_4\"\n    }\n  ]\n}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "Sucesso",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "default": true,
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "660e8400-e29b-41d4-a716-446655440010",
+          "body": "{\n\"titulo\":\"Não tem leite hoje\",\n\"code\":500,\n\"descricao\":\"Volte outro momento\"\n}",
+          "latency": 0,
+          "statusCode": 500,
+          "label": "Erro do servidor",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "default": false,
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "bd5b2623-9309-44f5-92b0-bf7ededacfd0",
+          "body": "{\n\"titulo\":\"Problema de Cadastro\",\n\"code\":422,\n\"descricao\":\"Parece que você não tem habilitado o Servico. Procure o Sac\"\n}",
+          "latency": 0,
+          "statusCode": 422,
+          "label": "Erro de negocio",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "type": "http",
+      "responseMode": null,
+      "streamingMode": null,
+      "streamingInterval": 0
     }
   ],
   "rootChildren": [
@@ -480,6 +564,10 @@
     {
       "type": "route",
       "uuid": "550e8400-e29b-41d4-a716-446655440006"
+    },
+    {
+      "type": "folder",
+      "uuid": "e2058fd1-cf69-4646-86bb-c0220981a700"
     }
   ],
   "proxyMode": false,
@@ -509,6 +597,17 @@
     }
   ],
   "data": [],
-  "folders": [],
+  "folders": [
+    {
+      "uuid": "e2058fd1-cf69-4646-86bb-c0220981a700",
+      "name": "servicos",
+      "children": [
+        {
+          "type": "route",
+          "uuid": "660e8400-e29b-41d4-a716-446655440008"
+        }
+      ]
+    }
+  ],
   "callbacks": []
 }

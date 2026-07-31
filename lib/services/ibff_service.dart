@@ -6,4 +6,5 @@ abstract class IBffService {
   Future<List<dynamic>> getExtrato();
   Future<Response> postTransferencia(Map<String, dynamic> payload);
   Future<dynamic> getCartaoCredito();
+  Future<dynamic> getComponentesServico();
 }

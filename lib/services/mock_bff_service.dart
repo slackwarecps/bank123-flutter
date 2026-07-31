@@ -2,6 +2,8 @@ import 'package:bank123/services/ibff_service.dart';
 import 'package:dio/dio.dart';
 
 class MockBffService implements IBffService {
+  // Flag para testar erros - mude para true para simular erro 422
+  static bool simularErroServico = false;
   @override
   Future<dynamic> getPerfil() async {
     await Future.delayed(const Duration(milliseconds: 500));
@@ -91,6 +93,51 @@ class MockBffService implements IBffService {
       "final": "0000",
       "faturaAtual": 1287.45,
       "limiteDisponivel": 4200.00,
+    };
+  }
+
+  @override
+  Future<dynamic> getComponentesServico() async {
+    await Future.delayed(const Duration(milliseconds: 500));
+
+    // Simular erro 422 se o flag estiver ativo
+    if (simularErroServico) {
+      final dioException = DioException(
+        requestOptions: RequestOptions(path: '/bank123/servicos/v1/home-servicos-sdu'),
+        response: Response(
+          requestOptions: RequestOptions(path: '/bank123/servicos/v1/home-servicos-sdu'),
+          statusCode: 422,
+          data: {
+            "titulo": "Problema de Cadastro",
+            "code": 422,
+            "descricao": "Parece que você não tem habilitado o Serviço. Procure o Sac"
+          },
+        ),
+      );
+      throw dioException;
+    }
+
+    return {
+      "buttons": [
+        {
+          "id": "servico1",
+          "label": "Serviço 1",
+          "icon": "receipt_long",
+          "action": "SERVICO_1"
+        },
+        {
+          "id": "servico2",
+          "label": "Serviço 2",
+          "icon": "history",
+          "action": "SERVICO_2"
+        },
+        {
+          "id": "servico3",
+          "label": "Serviço 3",
+          "icon": "download",
+          "action": "SERVICO_3"
+        }
+      ]
     };
   }
 }

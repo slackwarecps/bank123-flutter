@@ -10,7 +10,7 @@ import 'package:bank123/telas/pagina_nao_encontrada.dart';
 import 'package:bank123/telas/tela_de_erro.dart';
 import 'package:bank123/telas/transferencia_page.dart';
 import 'package:bank123/telas/extrato_page.dart';
-import 'package:bank123/telas/home_page.dart';
+import 'package:bank123/telas/home-principal/home_page.dart';
 import 'package:bank123/telas/jailbreak_page.dart'; // Importação da tela de Jailbreak
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';

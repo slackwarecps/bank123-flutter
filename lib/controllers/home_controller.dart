@@ -1,10 +1,12 @@
 import 'package:bank123/models/cartao_credito_model.dart';
 import 'package:bank123/services/ibff_service.dart';
+import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
+import 'dart:convert';
 import 'dart:developer' as developer;
 
 class HomeController extends GetxController {
@@ -19,6 +21,13 @@ class HomeController extends GetxController {
   var saldoVisivel = true.obs;
   var faturaVisivel = true.obs;
   Rxn<CartaoCreditoModel> cartao = Rxn<CartaoCreditoModel>();
+  var abaAtiva = 'Bank'.obs;
+  var componentesServico = Rxn<Map<String, dynamic>>();
+  var carregandoServico = false.obs;
+  var erroServico = false.obs;
+  var erroTituloServico = ''.obs;
+  var erroDescricaoServico = ''.obs;
+  var erroStatusCode = 0.obs;
 
   @override
   void onInit() {
@@ -133,14 +142,20 @@ class HomeController extends GetxController {
         cartaoFuture,
       ]);
 
-      final perfilData = results[0] as Map<String, dynamic>;
-      final saldoData = results[1] as Map<String, dynamic>;
-      final cartaoData = results[2] as Map<String, dynamic>;
+      if (results[0] is Map<String, dynamic> &&
+          results[1] is Map<String, dynamic> &&
+          results[2] is Map<String, dynamic>) {
+        final perfilData = results[0] as Map<String, dynamic>;
+        final saldoData = results[1] as Map<String, dynamic>;
+        final cartaoData = results[2] as Map<String, dynamic>;
 
-      nome.value = perfilData['nome'] ?? '';
-      saldo.value = (saldoData['saldo'] as num?)?.toDouble() ?? 0.0;
-      numeroConta.value = saldoData['numeroConta'] ?? '';
-      cartao.value = CartaoCreditoModel.fromJson(cartaoData);
+        nome.value = perfilData['nome'] ?? '';
+        saldo.value = (saldoData['saldo'] as num?)?.toDouble() ?? 0.0;
+        numeroConta.value = saldoData['numeroConta'] ?? '';
+        cartao.value = CartaoCreditoModel.fromJson(cartaoData);
+      } else {
+        throw Exception('Formato de resposta inválido');
+      }
     } catch (e) {
       developer.log('Erro ao carregar dados da Home: $e', name: 'HomeController');
       Get.snackbar(
@@ -170,5 +185,64 @@ class HomeController extends GetxController {
   void irParaTransferencia() async {
     if (!await _sessaoValida()) return;
     Get.toNamed('/transferencia');
+  }
+
+  Future<void> carregarComponentesServico() async {
+    try {
+      carregandoServico.value = true;
+      erroServico.value = false;
+      erroTituloServico.value = '';
+      erroDescricaoServico.value = '';
+      final dados = await _bffService.getComponentesServico();
+      if (dados is Map<String, dynamic>) {
+        componentesServico.value = dados;
+      } else {
+        throw Exception('Formato de resposta inválido');
+      }
+    } catch (e) {
+      developer.log('Erro ao carregar componentes do serviço: $e', name: 'HomeController');
+      erroServico.value = true;
+      componentesServico.value = null;
+
+      if (e is DioException && e.response != null) {
+        final statusCode = e.response?.statusCode ?? 0;
+        erroStatusCode.value = statusCode;
+        developer.log('Status code: $statusCode', name: 'HomeController');
+        developer.log('Response data: ${e.response?.data}', name: 'HomeController');
+        developer.log('Response data type: ${e.response?.data.runtimeType}', name: 'HomeController');
+
+        if (statusCode >= 400 && statusCode < 500) {
+          var errorData = e.response?.data;
+
+          // Se a resposta veio como String, faz parse manual
+          if (errorData is String) {
+            try {
+              errorData = jsonDecode(errorData) as Map<String, dynamic>;
+            } catch (parseError) {
+              developer.log('Erro ao fazer parse do JSON: $parseError', name: 'HomeController');
+              errorData = null;
+            }
+          }
+
+          if (errorData is Map<String, dynamic>) {
+            erroTituloServico.value = errorData['titulo'] ?? 'Erro';
+            erroDescricaoServico.value = errorData['descricao'] ?? 'Ocorreu um erro inesperado';
+          } else {
+            erroTituloServico.value = 'Erro na Requisição';
+            erroDescricaoServico.value = 'Não foi possível processar sua solicitação';
+          }
+        } else if (statusCode >= 500) {
+          erroTituloServico.value = 'Erro no Servidor';
+          erroDescricaoServico.value = 'Tente novamente mais tarde';
+        }
+      } else {
+        erroTituloServico.value = 'Erro de Conexão';
+        erroDescricaoServico.value = 'Verifique sua conexão com a internet';
+      }
+
+      developer.log('Erro setado - Titulo: ${erroTituloServico.value}, Descricao: ${erroDescricaoServico.value}', name: 'HomeController');
+    } finally {
+      carregandoServico.value = false;
+    }
   }
 }
