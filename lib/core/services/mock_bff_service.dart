@@ -382,6 +382,7 @@ class MockBffService implements IBffService {
               "tag": "Bank123 Invest",
               "titulo": "Conheça a nossa nova solução",
               "cta": "Diversificar seu patrimônio ficou ainda mais fácil",
+              "imagem": "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?w=800&q=80&auto=format&fit=crop",
               "action": "INVEST"
             },
             {
@@ -389,6 +390,7 @@ class MockBffService implements IBffService {
               "tag": "Bank123 Seguros",
               "titulo": "Proteja o que importa",
               "cta": "Garanta já a sua proteção",
+              "imagem": "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=800&q=80&auto=format&fit=crop",
               "action": "SEGURO"
             },
           ]

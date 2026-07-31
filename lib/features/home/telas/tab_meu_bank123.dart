@@ -12,102 +12,108 @@ class TabMeuBank123 extends StatelessWidget {
     final colorScheme = Theme.of(context).colorScheme;
     final controller = Get.put(TabMeuBank123Controller(), tag: 'tabMeuBank123');
 
-    return Obx(
-      () {
-        // Estado 1: Loading inicial
-        if (controller.isLoading.value && controller.componentes.isEmpty) {
-          return Center(
-            child: CircularProgressIndicator(color: colorScheme.primary),
-          );
-        }
+    return Obx(() {
+      // Estado 1: Loading inicial
+      if (controller.isLoading.value && controller.componentes.isEmpty) {
+        return Center(
+          child: CircularProgressIndicator(color: colorScheme.primary),
+        );
+      }
 
-        // Estado 2: Erro
-        if (controller.temErro.value) {
-          final is422 = controller.erroStatusCode.value == 422;
-          final iconData = is422 ? Icons.warning_outlined : Icons.error_outline;
-          final iconColor = is422 ? Colors.amber : colorScheme.error;
+      // Estado 2: Erro
+      if (controller.temErro.value) {
+        final is422 = controller.erroStatusCode.value == 422;
+        final iconData = is422 ? Icons.warning_outlined : Icons.error_outline;
+        final iconColor = is422 ? Colors.amber : colorScheme.error;
 
-          return RefreshIndicator(
-            onRefresh: () => controller.carregarHomeApp(),
-            child: ListView(
-              children: [
-                SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.6,
-                  child: Center(
-                    child: Padding(
-                      padding: const EdgeInsets.all(32),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(iconData, size: 80, color: iconColor),
-                          const SizedBox(height: 24),
-                          Text(
-                            controller.erroTitulo.value,
-                            textAlign: TextAlign.center,
-                            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                ),
-                          ),
-                          if (controller.erroDescricao.value.isNotEmpty) ...[
-                            const SizedBox(height: 12),
-                            Text(
-                              controller.erroDescricao.value,
-                              textAlign: TextAlign.center,
-                              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                    color: colorScheme.onSurface.withValues(alpha: 0.7),
-                                  ),
-                            ),
-                          ],
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          );
-        }
-
-        // Estado 3: Vazio
-        if (controller.componentes.isEmpty) {
-          return RefreshIndicator(
-            onRefresh: () => controller.carregarHomeApp(),
-            child: ListView(
-              children: [
-                SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.6,
-                  child: Center(
+        return RefreshIndicator(
+          onRefresh: () => controller.carregarHomeApp(),
+          child: ListView(
+            children: [
+              SizedBox(
+                height: MediaQuery.of(context).size.height * 0.6,
+                child: Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(32),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.dashboard_customize_outlined,
-                            size: 80, color: colorScheme.outlineVariant),
-                        const SizedBox(height: 16),
-                        Text('Nada por aqui ainda',
-                            style: Theme.of(context).textTheme.headlineSmall),
+                        Icon(iconData, size: 80, color: iconColor),
+                        const SizedBox(height: 24),
+                        Text(
+                          controller.erroTitulo.value,
+                          textAlign: TextAlign.center,
+                          style: Theme.of(context).textTheme.headlineSmall
+                              ?.copyWith(fontWeight: FontWeight.bold),
+                        ),
+                        if (controller.erroDescricao.value.isNotEmpty) ...[
+                          const SizedBox(height: 12),
+                          Text(
+                            controller.erroDescricao.value,
+                            textAlign: TextAlign.center,
+                            style: Theme.of(
+                              context,
+                            ).textTheme.bodyMedium?.copyWith(
+                              color: colorScheme.onSurface.withValues(
+                                alpha: 0.7,
+                              ),
+                            ),
+                          ),
+                        ],
                       ],
                     ),
                   ),
                 ),
-              ],
-            ),
-          );
-        }
-
-        // Estado 4: Sucesso — renderiza o SDU vindo do BFF
-        return RefreshIndicator(
-          onRefresh: () => controller.carregarHomeApp(),
-          child: ListView.builder(
-            padding: const EdgeInsets.only(top: 16, bottom: 32),
-            itemCount: controller.componentes.length,
-            itemBuilder: (context, index) {
-              final componente = controller.componentes[index];
-              return _buildComponente(context, controller, componente);
-            },
+              ),
+            ],
           ),
         );
-      },
-    );
+      }
+
+      // Estado 3: Vazio
+      if (controller.componentes.isEmpty) {
+        return RefreshIndicator(
+          onRefresh: () => controller.carregarHomeApp(),
+          child: ListView(
+            children: [
+              SizedBox(
+                height: MediaQuery.of(context).size.height * 0.6,
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.dashboard_customize_outlined,
+                        size: 80,
+                        color: colorScheme.outlineVariant,
+                      ),
+                      const SizedBox(height: 16),
+                      Text(
+                        'Nada por aqui ainda',
+                        style: Theme.of(context).textTheme.headlineSmall,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      }
+
+      // Estado 4: Sucesso — renderiza o SDU vindo do BFF
+      return RefreshIndicator(
+        onRefresh: () => controller.carregarHomeApp(),
+        child: ListView.builder(
+          padding: const EdgeInsets.only(top: 16, bottom: 32),
+          itemCount: controller.componentes.length,
+          itemBuilder: (context, index) {
+            final componente = controller.componentes[index];
+            return _buildComponente(context, controller, componente);
+          },
+        ),
+      );
+    });
   }
 
   Widget _buildComponente(
@@ -137,9 +143,10 @@ class TabMeuBank123 extends StatelessWidget {
     Map<String, dynamic> componente,
   ) {
     final colorScheme = Theme.of(context).colorScheme;
-    final itens = (componente['itens'] as List<dynamic>? ?? [])
-        .map((e) => e as Map<String, dynamic>)
-        .toList();
+    final itens =
+        (componente['itens'] as List<dynamic>? ?? [])
+            .map((e) => e as Map<String, dynamic>)
+            .toList();
 
     return SizedBox(
       height: 96,
@@ -152,11 +159,16 @@ class TabMeuBank123 extends StatelessWidget {
           return Padding(
             padding: const EdgeInsets.only(right: 12),
             child: InkWell(
-              onTap: () => controller.executarAcao(item['action'] as String? ?? ''),
+              onTap:
+                  () =>
+                      controller.executarAcao(item['action'] as String? ?? ''),
               borderRadius: BorderRadius.circular(12),
               child: Container(
                 width: 84,
-                padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
+                padding: const EdgeInsets.symmetric(
+                  vertical: 12,
+                  horizontal: 8,
+                ),
                 decoration: BoxDecoration(
                   color: colorScheme.surfaceContainerHighest,
                   borderRadius: BorderRadius.circular(12),
@@ -198,7 +210,9 @@ class TabMeuBank123 extends StatelessWidget {
         icone: _getIconFromName(componente['icone'] as String? ?? ''),
         titulo: componente['titulo'] as String? ?? '',
         descricao: componente['descricao'] as String? ?? '',
-        onTap: () => controller.executarAcao(componente['action'] as String? ?? ''),
+        onTap:
+            () =>
+                controller.executarAcao(componente['action'] as String? ?? ''),
       ),
     );
   }
@@ -222,8 +236,8 @@ class TabMeuBank123 extends StatelessWidget {
                 child: Text(
                   componente['titulo'] as String? ?? '',
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
               Obx(
@@ -262,16 +276,29 @@ class TabMeuBank123 extends StatelessWidget {
                     Obx(
                       () => Text(
                         controller.saldoVisivel.value
-                            ? NumberFormat.currency(locale: 'pt_BR', symbol: 'R\$').format(valor)
+                            ? NumberFormat.currency(
+                              locale: 'pt_BR',
+                              symbol: 'R\$',
+                            ).format(valor)
                             : 'R\$ ••••••',
-                        style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                        style: const TextStyle(
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                     TextButton.icon(
-                      onPressed: () => controller.executarAcao(componente['action'] as String? ?? ''),
-                      icon: Text(componente['acaoLabel'] as String? ?? 'Acessar'),
+                      onPressed:
+                          () => controller.executarAcao(
+                            componente['action'] as String? ?? '',
+                          ),
+                      icon: Text(
+                        componente['acaoLabel'] as String? ?? 'Acessar',
+                      ),
                       label: const Icon(Icons.chevron_right, size: 18),
-                      style: TextButton.styleFrom(iconAlignment: IconAlignment.end),
+                      style: TextButton.styleFrom(
+                        iconAlignment: IconAlignment.end,
+                      ),
                     ),
                   ],
                 ),
@@ -303,8 +330,8 @@ class TabMeuBank123 extends StatelessWidget {
                 child: Text(
                   componente['titulo'] as String? ?? '',
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
               Obx(
@@ -333,7 +360,10 @@ class TabMeuBank123 extends StatelessWidget {
                   children: [
                     Text(
                       (componente['bandeira'] as String? ?? '').toUpperCase(),
-                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 13,
+                      ),
                     ),
                     const SizedBox(width: 8),
                     Expanded(
@@ -354,20 +384,27 @@ class TabMeuBank123 extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            componente['faturaLabel'] as String? ?? 'Sua fatura',
+                            componente['faturaLabel'] as String? ??
+                                'Sua fatura',
                             style: TextStyle(
                               fontSize: 12,
-                              color: colorScheme.onSurface.withValues(alpha: 0.7),
+                              color: colorScheme.onSurface.withValues(
+                                alpha: 0.7,
+                              ),
                             ),
                           ),
                           const SizedBox(height: 4),
                           Obx(
                             () => Text(
                               controller.faturaVisivel.value
-                                  ? NumberFormat.currency(locale: 'pt_BR', symbol: 'R\$')
-                                      .format(fatura)
+                                  ? NumberFormat.currency(
+                                    locale: 'pt_BR',
+                                    symbol: 'R\$',
+                                  ).format(fatura)
                                   : 'R\$ ••••••',
-                              style: const TextStyle(fontWeight: FontWeight.bold),
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ),
                         ],
@@ -378,20 +415,27 @@ class TabMeuBank123 extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            componente['limiteLabel'] as String? ?? 'Limite disponível',
+                            componente['limiteLabel'] as String? ??
+                                'Limite disponível',
                             style: TextStyle(
                               fontSize: 12,
-                              color: colorScheme.onSurface.withValues(alpha: 0.7),
+                              color: colorScheme.onSurface.withValues(
+                                alpha: 0.7,
+                              ),
                             ),
                           ),
                           const SizedBox(height: 4),
                           Obx(
                             () => Text(
                               controller.faturaVisivel.value
-                                  ? NumberFormat.currency(locale: 'pt_BR', symbol: 'R\$')
-                                      .format(limite)
+                                  ? NumberFormat.currency(
+                                    locale: 'pt_BR',
+                                    symbol: 'R\$',
+                                  ).format(limite)
                                   : 'R\$ ••••••',
-                              style: const TextStyle(fontWeight: FontWeight.bold),
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ),
                         ],
@@ -404,22 +448,31 @@ class TabMeuBank123 extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     TextButton(
-                      onPressed: () =>
-                          controller.executarAcao(componente['acaoFaturaAction'] as String? ?? ''),
+                      onPressed:
+                          () => controller.executarAcao(
+                            componente['acaoFaturaAction'] as String? ?? '',
+                          ),
                       style: TextButton.styleFrom(
                         padding: EdgeInsets.zero,
                         tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                       ),
-                      child: Text(componente['acaoFaturaLabel'] as String? ?? 'Ver fatura'),
+                      child: Text(
+                        componente['acaoFaturaLabel'] as String? ??
+                            'Ver fatura',
+                      ),
                     ),
                     TextButton(
-                      onPressed: () =>
-                          controller.executarAcao(componente['acaoMaisAction'] as String? ?? ''),
+                      onPressed:
+                          () => controller.executarAcao(
+                            componente['acaoMaisAction'] as String? ?? '',
+                          ),
                       style: TextButton.styleFrom(
                         padding: EdgeInsets.zero,
                         tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                       ),
-                      child: Text(componente['acaoMaisLabel'] as String? ?? 'Ver mais'),
+                      child: Text(
+                        componente['acaoMaisLabel'] as String? ?? 'Ver mais',
+                      ),
                     ),
                   ],
                 ),
@@ -437,9 +490,10 @@ class TabMeuBank123 extends StatelessWidget {
     Map<String, dynamic> componente,
   ) {
     final colorScheme = Theme.of(context).colorScheme;
-    final itens = (componente['itens'] as List<dynamic>? ?? [])
-        .map((e) => e as Map<String, dynamic>)
-        .toList();
+    final itens =
+        (componente['itens'] as List<dynamic>? ?? [])
+            .map((e) => e as Map<String, dynamic>)
+            .toList();
 
     if (itens.isEmpty) return const SizedBox.shrink();
 
@@ -452,18 +506,19 @@ class TabMeuBank123 extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Text(
               componente['titulo'] as String? ?? '',
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
             ),
           ),
           const SizedBox(height: 16),
           SizedBox(
-            height: 220,
+            height: 340,
             child: PageView.builder(
-              controller: PageController(viewportFraction: 0.86),
+              controller: PageController(viewportFraction: 0.72),
               itemCount: itens.length,
-              onPageChanged: (index) => controller.paginaCarrossel.value = index,
+              onPageChanged:
+                  (index) => controller.paginaCarrossel.value = index,
               itemBuilder: (context, index) {
                 final item = itens[index];
                 return Padding(
@@ -472,7 +527,11 @@ class TabMeuBank123 extends StatelessWidget {
                     tag: item['tag'] as String? ?? '',
                     titulo: item['titulo'] as String? ?? '',
                     cta: item['cta'] as String? ?? '',
-                    onTap: () => controller.executarAcao(item['action'] as String? ?? ''),
+                    imagemUrl: item['imagem'] as String?,
+                    onTap:
+                        () => controller.executarAcao(
+                          item['action'] as String? ?? '',
+                        ),
                   ),
                 );
               },
@@ -490,9 +549,10 @@ class TabMeuBank123 extends StatelessWidget {
                   margin: const EdgeInsets.symmetric(horizontal: 3),
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: controller.paginaCarrossel.value == index
-                        ? colorScheme.primary
-                        : colorScheme.outlineVariant,
+                    color:
+                        controller.paginaCarrossel.value == index
+                            ? colorScheme.primary
+                            : colorScheme.outlineVariant,
                   ),
                 ),
               ),

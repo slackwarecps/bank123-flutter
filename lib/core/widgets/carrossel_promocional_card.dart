@@ -4,6 +4,7 @@ class CarrosselPromocionalCard extends StatelessWidget {
   final String tag;
   final String titulo;
   final String cta;
+  final String? imagemUrl;
   final VoidCallback? onTap;
 
   const CarrosselPromocionalCard({
@@ -11,6 +12,7 @@ class CarrosselPromocionalCard extends StatelessWidget {
     required this.tag,
     required this.titulo,
     required this.cta,
+    this.imagemUrl,
     this.onTap,
   });
 
@@ -21,55 +23,102 @@ class CarrosselPromocionalCard extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(16),
-      child: Container(
-        padding: const EdgeInsets.all(20),
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [colorScheme.primary, colorScheme.primaryContainer],
-          ),
-          borderRadius: BorderRadius.circular(16),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(16),
+        child: Stack(
+          fit: StackFit.expand,
           children: [
-            Text(
-              tag,
-              style: TextStyle(
-                color: colorScheme.onPrimary.withValues(alpha: 0.85),
-                fontSize: 12,
-              ),
-            ),
-            Text(
-              titulo,
-              style: TextStyle(
-                color: colorScheme.onPrimary,
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+            if (imagemUrl != null && imagemUrl!.isNotEmpty)
+              Image.network(
+                imagemUrl!,
+                fit: BoxFit.cover,
+                loadingBuilder: (context, child, progress) {
+                  if (progress == null) return child;
+                  return _buildFundoGradiente(colorScheme);
+                },
+                errorBuilder:
+                    (context, error, stackTrace) =>
+                        _buildFundoGradiente(colorScheme),
+              )
+            else
+              _buildFundoGradiente(colorScheme),
+            DecoratedBox(
               decoration: BoxDecoration(
-                color: colorScheme.onPrimary.withValues(alpha: 0.15),
-                borderRadius: BorderRadius.circular(8),
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    Colors.black.withValues(alpha: 0.55),
+                    Colors.black.withValues(alpha: 0.05),
+                    Colors.black.withValues(alpha: 0.6),
+                  ],
+                  stops: const [0.0, 0.45, 1.0],
+                ),
               ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
+            ),
+            Padding(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Flexible(
-                    child: Text(
-                      cta,
-                      style: TextStyle(color: colorScheme.onPrimary, fontSize: 13),
+                  Text(
+                    tag,
+                    style: const TextStyle(color: Colors.white, fontSize: 12),
+                  ),
+                  Text(
+                    titulo,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
-                  Icon(Icons.chevron_right, color: colorScheme.onPrimary, size: 18),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 10,
+                    ),
+                    decoration: BoxDecoration(
+                      color: colorScheme.primary,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Flexible(
+                          child: Text(
+                            cta,
+                            style: TextStyle(
+                              color: colorScheme.onPrimary,
+                              fontSize: 13,
+                            ),
+                          ),
+                        ),
+                        Icon(
+                          Icons.chevron_right,
+                          color: colorScheme.onPrimary,
+                          size: 18,
+                        ),
+                      ],
+                    ),
+                  ),
                 ],
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildFundoGradiente(ColorScheme colorScheme) {
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [colorScheme.primary, colorScheme.primaryContainer],
         ),
       ),
     );
