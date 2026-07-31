@@ -12,6 +12,8 @@ IMPORTANTE: Nunca commit no git sem ser expressamente orientado.
 
 O backend é um repositório separado: `bff-bank123`, um serviço Spring Boot apoiado por PostgreSQL. Não faz parte deste repositório.
 
+A Pasta do Mockoon fica em /bff-mockoon
+
 ## Comandos
 
 ```bash

@@ -8,25 +8,29 @@ class MockBanner extends StatelessWidget {
     final padding = MediaQuery.of(context).padding;
 
     return IgnorePointer(
-      child: Positioned(
-        top: padding.top + 4,
-        right: 12,
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-          decoration: BoxDecoration(
-            color: Colors.orange,
-            borderRadius: BorderRadius.circular(4),
-          ),
-          child: const Text(
-            'MOCK',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 9,
-              fontWeight: FontWeight.bold,
-              letterSpacing: 0.3,
+      child: Stack(
+        children: [
+          Positioned(
+            top: padding.top + 4,
+            right: 12,
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              decoration: BoxDecoration(
+                color: Colors.orange,
+                borderRadius: BorderRadius.circular(4),
+              ),
+              child: const Text(
+                'MOCK',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 9,
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 0.3,
+                ),
+              ),
             ),
           ),
-        ),
+        ],
       ),
     );
   }
