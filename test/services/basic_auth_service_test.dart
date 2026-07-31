@@ -1,6 +1,6 @@
-import 'package:bank123/models/basic_auth_token.dart';
-import 'package:bank123/services/auth_exceptions.dart';
-import 'package:bank123/services/basic_auth_service.dart';
+import 'package:bank123/core/models/basic_auth_token.dart';
+import 'package:bank123/core/services/auth_exceptions.dart';
+import 'package:bank123/core/services/basic_auth_service.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';

@@ -1,21 +1,21 @@
-import 'package:bank123/bindings/initial_binding.dart';
-import 'package:bank123/bindings/login_binding.dart';
-import 'package:bank123/bindings/home_binding.dart';
+import 'package:bank123/core/bindings/initial_binding.dart';
+import 'package:bank123/features/auth/login_binding.dart';
+import 'package:bank123/features/home/home_binding.dart';
 
-import 'package:bank123/telas/cadastro_page.dart';
-import 'package:bank123/telas/configuracao_page.dart';
-import 'package:bank123/telas/perfil_page.dart';
-import 'package:bank123/telas/login.dart';
-import 'package:bank123/telas/pagina_nao_encontrada.dart';
-import 'package:bank123/telas/tela_de_erro.dart';
-import 'package:bank123/telas/transferencia_page.dart';
-import 'package:bank123/telas/extrato_page.dart';
-import 'package:bank123/telas/home-principal/home_page.dart';
-import 'package:bank123/telas/jailbreak_page.dart'; // Importação da tela de Jailbreak
+import 'package:bank123/features/auth/telas/cadastro_page.dart';
+import 'package:bank123/features/configuracao/configuracao_page.dart';
+import 'package:bank123/features/perfil/perfil_page.dart';
+import 'package:bank123/features/auth/telas/login.dart';
+import 'package:bank123/core/telas/pagina_nao_encontrada.dart';
+import 'package:bank123/core/telas/tela_de_erro.dart';
+import 'package:bank123/features/transferencia/transferencia_page.dart';
+import 'package:bank123/features/extrato/extrato_page.dart';
+import 'package:bank123/features/home/telas/home_page.dart';
+import 'package:bank123/core/telas/jailbreak_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:bank123/firebase_options.dart';
+import 'package:bank123/core/firebase_options.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:safe_device/safe_device.dart'; // Importação do pacote safe_device
 import 'dart:ui';

@@ -1,5 +1,5 @@
-import 'package:bank123/services/auth_service.dart';
-import 'package:bank123/services/mock_auth_service.dart';
+import 'package:bank123/core/services/auth_service.dart';
+import 'package:bank123/core/services/mock_auth_service.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

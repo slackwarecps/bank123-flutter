@@ -1,7 +1,7 @@
-import 'package:bank123/bindings/initial_binding.dart';
-import 'package:bank123/services/auth_service.dart';
-import 'package:bank123/services/basic_auth_service.dart';
-import 'package:bank123/services/firebase_auth_service.dart';
+import 'package:bank123/core/bindings/initial_binding.dart';
+import 'package:bank123/core/services/auth_service.dart';
+import 'package:bank123/core/services/basic_auth_service.dart';
+import 'package:bank123/core/services/firebase_auth_service.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get/get.dart';
 
