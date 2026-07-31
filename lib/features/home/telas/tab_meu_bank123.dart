@@ -1,3 +1,4 @@
+import 'package:bank123/core/widgets/widgets.dart';
 import 'package:bank123/features/home/telas/tab_meu_bank123_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -191,52 +192,13 @@ class TabMeuBank123 extends StatelessWidget {
     TabMeuBank123Controller controller,
     Map<String, dynamic> componente,
   ) {
-    final colorScheme = Theme.of(context).colorScheme;
-
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
-      child: InkWell(
+      child: BannerDestaque(
+        icone: _getIconFromName(componente['icone'] as String? ?? ''),
+        titulo: componente['titulo'] as String? ?? '',
+        descricao: componente['descricao'] as String? ?? '',
         onTap: () => controller.executarAcao(componente['action'] as String? ?? ''),
-        borderRadius: BorderRadius.circular(12),
-        child: Container(
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: colorScheme.surfaceContainerHighest,
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: Row(
-            children: [
-              CircleAvatar(
-                radius: 18,
-                backgroundColor: colorScheme.primary.withValues(alpha: 0.1),
-                child: Icon(
-                  _getIconFromName(componente['icone'] as String? ?? ''),
-                  color: colorScheme.primary,
-                  size: 18,
-                ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: RichText(
-                  text: TextSpan(
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: colorScheme.onSurface,
-                        ),
-                    children: [
-                      TextSpan(
-                        text: '${componente['titulo'] ?? ''} ',
-                        style: const TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      TextSpan(text: componente['descricao'] as String? ?? ''),
-                    ],
-                  ),
-                ),
-              ),
-              const SizedBox(width: 8),
-              Icon(Icons.chevron_right, color: colorScheme.onSurface.withValues(alpha: 0.5)),
-            ],
-          ),
-        ),
       ),
     );
   }
@@ -506,60 +468,11 @@ class TabMeuBank123 extends StatelessWidget {
                 final item = itens[index];
                 return Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 6),
-                  child: InkWell(
+                  child: CarrosselPromocionalCard(
+                    tag: item['tag'] as String? ?? '',
+                    titulo: item['titulo'] as String? ?? '',
+                    cta: item['cta'] as String? ?? '',
                     onTap: () => controller.executarAcao(item['action'] as String? ?? ''),
-                    borderRadius: BorderRadius.circular(16),
-                    child: Container(
-                      padding: const EdgeInsets.all(20),
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                          colors: [colorScheme.primary, colorScheme.primaryContainer],
-                        ),
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            item['tag'] as String? ?? '',
-                            style: TextStyle(
-                              color: colorScheme.onPrimary.withValues(alpha: 0.85),
-                              fontSize: 12,
-                            ),
-                          ),
-                          Text(
-                            item['titulo'] as String? ?? '',
-                            style: TextStyle(
-                              color: colorScheme.onPrimary,
-                              fontSize: 22,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-                            decoration: BoxDecoration(
-                              color: colorScheme.onPrimary.withValues(alpha: 0.15),
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Flexible(
-                                  child: Text(
-                                    item['cta'] as String? ?? '',
-                                    style: TextStyle(color: colorScheme.onPrimary, fontSize: 13),
-                                  ),
-                                ),
-                                Icon(Icons.chevron_right, color: colorScheme.onPrimary, size: 18),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
                   ),
                 );
               },
