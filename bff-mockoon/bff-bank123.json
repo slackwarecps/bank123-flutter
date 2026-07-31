@@ -15,7 +15,7 @@
       "responses": [
         {
           "uuid": "da37b4fd-e265-41d5-a847-127d41c0ff59",
-          "body": "{\n  \"nome\": \"Fabão (Mock User)\",\n  \"email\": \"teste@teste.com.br\",\n  \"ultimoAcesso\": \"2026-07-30T12:00:00.000\",\n  \"metadata\": {\n    \"isMock\": true,\n    \"tccStatus\": \"Running local\"\n  }\n}",
+          "body": "{\n  \"nome\": \"Fabão Mockoon da Silva\",\n  \"email\": \"teste@teste.com.br\",\n  \"ultimoAcesso\": \"2026-07-30T12:00:00.000\",\n  \"metadata\": {\n    \"isMock\": true,\n    \"tccStatus\": \"Running local\"\n  }\n}",
           "latency": 0,
           "statusCode": 200,
           "label": "Sucesso",
@@ -534,6 +534,42 @@
       "responseMode": null,
       "streamingMode": null,
       "streamingInterval": 0
+    },
+    {
+      "uuid": "660e8400-e29b-41d4-a716-446655440011",
+      "documentation": "GET /cartao/v1/resumo — Retorna resumo do cartão de crédito",
+      "method": "get",
+      "endpoint": "/bff-bank123/cartao/v1/resumo",
+      "responses": [
+        {
+          "uuid": "660e8400-e29b-41d4-a716-446655440012",
+          "body": "{\n  \"bandeira\": \"Platinum\",\n  \"final\": \"0000\",\n  \"faturaAtual\": 1287.45,\n  \"limiteDisponivel\": 4200.00\n}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "Sucesso",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "default": true,
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "responseMode": null,
+      "type": "http",
+      "streamingMode": null,
+      "streamingInterval": 0
     }
   ],
   "rootChildren": [
@@ -560,6 +596,10 @@
     {
       "type": "route",
       "uuid": "550e8400-e29b-41d4-a716-446655440004"
+    },
+    {
+      "type": "route",
+      "uuid": "660e8400-e29b-41d4-a716-446655440011"
     },
     {
       "type": "route",
